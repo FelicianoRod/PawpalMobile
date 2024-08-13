@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -36,6 +38,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberImagePainter
 import com.example.userprofile.ui.components.TopAppBarUserProfile
+import com.example.userprofile.ui.models.SettingsOptionUserProfile
 import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
@@ -46,6 +49,22 @@ fun UserProfileScreenPreview() {
 
 @Composable
 fun UserProfileScreen() {
+    val options = listOf(
+        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
+        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
+        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
+        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
+        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
+        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
+        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
+        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
+        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
+        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
+        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
+        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
+        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
+    )
+
     Scaffold(
         topBar = { TopAppBarUserProfile() }
     ) { innerPadding ->
@@ -71,13 +90,13 @@ fun UserProfileScreen() {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Hello",
+                text = "Feliciano Rodríguez",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
 
             Text(
-                text = "hello",
+                text = "Amante de los perritos",
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color.Gray
             )
@@ -92,6 +111,18 @@ fun UserProfileScreen() {
                 ActionButton("Message")
                 ActionButton("Location")
             }
+            Column() {
+                options.forEach { option ->
+                    SettingOptionItem(option = option)
+                }
+            }
+//            LazyColumn() {
+//                items(100) {
+//                    Text(text = "Hola $it")
+//                }
+
+
+//            }
         }
 
     }
@@ -109,5 +140,24 @@ fun ActionButton(text: String) {
 //                .weight(1f)
     ) {
         Text(text)
+    }
+}
+
+@Composable
+fun SettingOptionItem(option: SettingsOptionUserProfile) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f), shape = CircleShape),
+            ) {
+            option.icon()
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+        Text(text = option.text)
     }
 }
