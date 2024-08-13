@@ -11,9 +11,6 @@
       <SelectionState runConfigName="authentication">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
-      <SelectionState runConfigName="app.userprofile">
-        <option name="selectionMode" value="DROPDOWN" />
-      </SelectionState>
       <SelectionState runConfigName="userprofile">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>

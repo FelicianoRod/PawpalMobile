@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -50,6 +51,10 @@ fun UserProfileScreenPreview() {
 @Composable
 fun UserProfileScreen() {
     val options = listOf(
+        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
+        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
+        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
+        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
         SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
         SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
         SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
@@ -111,18 +116,20 @@ fun UserProfileScreen() {
                 ActionButton("Message")
                 ActionButton("Location")
             }
-            Column() {
-                options.forEach { option ->
+//            Column() {
+//                options.forEach { option ->
+//                    SettingOptionItem(option = option)
+//                }
+//            }
+            LazyColumn(
+                modifier = Modifier.fillMaxSize().background(Color.Gray)
+            ) {
+                items(options) { option ->
                     SettingOptionItem(option = option)
                 }
+
+
             }
-//            LazyColumn() {
-//                items(100) {
-//                    Text(text = "Hola $it")
-//                }
-
-
-//            }
         }
 
     }
@@ -154,6 +161,7 @@ fun SettingOptionItem(option: SettingsOptionUserProfile) {
             modifier = Modifier
                 .size(40.dp)
                 .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f), shape = CircleShape),
+            contentAlignment = Alignment.Center,
             ) {
             option.icon()
         }
