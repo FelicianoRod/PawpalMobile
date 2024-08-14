@@ -11,6 +11,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/authentication" />
+            <option value="$PROJECT_DIR$/dogprofile" />
             <option value="$PROJECT_DIR$/home" />
             <option value="$PROJECT_DIR$/userprofile" />
           </set>
