@@ -19,6 +19,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -51,30 +52,19 @@ fun UserProfileScreenPreview() {
 @Composable
 fun UserProfileScreen() {
     val options = listOf(
-        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
-        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
-        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
-        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
-        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
-        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
-        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
-        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
-        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
-        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
-        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
-        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
-        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
-        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
-        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
-        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
-        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 1"),
+        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Editar perfil"),
+        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Mi estatus"),
+        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Ajustes"),
+        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Invitar a un amigo"),
+        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Ayuda"),
     )
 
     Scaffold(
         topBar = { TopAppBarUserProfile() }
     ) { innerPadding ->
         Column(
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier
+                .padding(innerPadding)
                 .fillMaxSize()
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -106,7 +96,7 @@ fun UserProfileScreen() {
                 color = Color.Gray
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Row(
                 horizontalArrangement = Arrangement.SpaceEvenly,
@@ -116,13 +106,20 @@ fun UserProfileScreen() {
                 ActionButton("Message")
                 ActionButton("Location")
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
 //            Column() {
 //                options.forEach { option ->
 //                    SettingOptionItem(option = option)
 //                }
 //            }
             LazyColumn(
-                modifier = Modifier.fillMaxSize().background(Color.Gray)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(Color.Gray)
+                    .padding(8.dp),
+
             ) {
                 items(options) { option ->
                     SettingOptionItem(option = option)
@@ -154,18 +151,33 @@ fun ActionButton(text: String) {
 fun SettingOptionItem(option: SettingsOptionUserProfile) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Box(
-            modifier = Modifier
-                .size(40.dp)
-                .background(MaterialTheme.colorScheme.primary.copy(alpha = 0.2f), shape = CircleShape),
-            contentAlignment = Alignment.Center,
-            ) {
-            option.icon()
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(60.dp)
+                    .background(
+                        MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                        shape = CircleShape
+                    ),
+                contentAlignment = Alignment.Center,
+                ) {
+                option.icon()
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Text(text = option.text)
+
         }
-        Spacer(modifier = Modifier.width(16.dp))
-        Text(text = option.text)
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(imageVector = Icons.AutoMirrored.Default.ArrowForward, contentDescription = "Ir" )
+        }
     }
+    Spacer(modifier = Modifier.height(8.dp))
 }
