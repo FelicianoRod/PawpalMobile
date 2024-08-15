@@ -1,6 +1,7 @@
 package com.example.home.ui.partials
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,25 +31,28 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+
 //import java.lang.reflect.Modifier
 
 @Preview(showBackground = true)
 @Composable
 fun DrawerPreview() {
-    DrawerContent()
+    DrawerContent(navController = rememberNavController())
 }
 
 @Composable
-fun DrawerContent() {
+fun DrawerContent(navController: NavController) {
     Box(
         modifier = Modifier.fillMaxSize().padding(12.dp)
     ) {
-        DrawerSection()
+        DrawerSection(navController)
     }
 }
 
 @Composable
-fun DrawerSection() {
+fun DrawerSection(navController: NavController) {
     Column() {
         Spacer(modifier = Modifier.height(16.dp))
         Row() {
@@ -61,6 +65,10 @@ fun DrawerSection() {
                 icon = Icons.Default.Person,
                 label = "Usuarios",
                 notificationCount = 24,
+                modifier = Modifier.clickable {
+//                    scope.launch { drawerState.close() }
+                    navController.navigate("user_profile")
+                }
 //                modifier = Modifier.clickable {
 //                    scope.launch { drawerState.close() }
 //                    navController.navigate(Screen.Home.route)
@@ -70,6 +78,10 @@ fun DrawerSection() {
                 icon = Icons.Default.Pets,
                 label = "Mascotas",
                 notificationCount = 1,
+                modifier = Modifier.clickable {
+//                    scope.launch { drawerState.close() }
+                    navController.navigate("dog_profile")
+                }
             )
             Divider(
                 color = Color.Gray,
@@ -110,6 +122,8 @@ fun DrawerItem(
 //            .background(Color(0xFFEDE7F6), shape = RoundedCornerShape(24.dp))
             .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(30.dp))
             .padding(horizontal = 16.dp, vertical = 16.dp),
+
+
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(

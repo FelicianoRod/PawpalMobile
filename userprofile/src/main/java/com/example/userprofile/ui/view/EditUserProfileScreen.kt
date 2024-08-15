@@ -12,11 +12,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -45,7 +42,7 @@ fun EditUserProfileScreenPreview() {
 fun EditUserProfileScreen() {
     var username by remember { mutableStateOf(TextFieldValue("Your Username")) }
     var email by remember { mutableStateOf(TextFieldValue("Your Email")) }
-    var profilePicture by remember { mutableStateOf(R.drawable.ic_launcher_foreground) }
+    var profilePicture by remember { mutableStateOf(R.drawable.ic_launcher_foreground_userprofile) }
 
     Column(
         modifier = androidx.compose.ui.Modifier

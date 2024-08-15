@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -38,19 +39,22 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
 import com.example.userprofile.ui.components.TopAppBarUserProfile
 import com.example.userprofile.ui.models.SettingsOptionUserProfile
 import kotlinx.coroutines.launch
 
+
 @Preview(showBackground = true)
 @Composable
 fun UserProfileScreenPreview() {
-    UserProfileScreen()
+    UserProfileScreen(navController = rememberNavController())
 }
 
 @Composable
-fun UserProfileScreen() {
+fun UserProfileScreen(navController: NavController) {
     val options = listOf(
         SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Editar perfil"),
         SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Mi estatus"),
@@ -76,7 +80,9 @@ fun UserProfileScreen() {
                     .background(MaterialTheme.colorScheme.primary)
             ) {
                 Image(
-                    painter = rememberImagePainter(data = "https://stickerly.pstatic.net/sticker_pack/YIkMXfxwRMMvVMIoXINUA/YPR0TM/2/b73fd3d3-800c-4a7b-babf-43eafb8b23c7.png"),
+                    painter = rememberImagePainter(
+                        data = "https://media.istockphoto.com/id/1311957094/es/foto/guapo-joven-sonriente-con-retrato-de-brazos-cruzados.jpg?s=612x612&w=0&k=20&c=x5LVA3-Y4WCfJmz6FzGTjXYv4tB1HPVkLuhLqcj8g6Q="
+                    ),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
@@ -85,13 +91,13 @@ fun UserProfileScreen() {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Feliciano Rodríguez",
+                text = "Edgar Hurtado",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
 
             Text(
-                text = "Amante de los perritos",
+                text = "Amante canino",
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color.Gray
             )
@@ -102,9 +108,9 @@ fun UserProfileScreen() {
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                ActionButton("5 Min")
-                ActionButton("Message")
-                ActionButton("Location")
+                ActionButton("Caninos")
+                ActionButton("Pagos")
+                ActionButton("Notific.")
             }
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -117,7 +123,7 @@ fun UserProfileScreen() {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.Gray)
+//                    .background(Color.Gray)
                     .padding(8.dp),
 
             ) {
@@ -140,7 +146,13 @@ fun ActionButton(text: String) {
         shape = RoundedCornerShape(50),
         modifier = Modifier
             .padding(8.dp)
-            .height(50.dp)
+            .height(50.dp),
+        colors = ButtonColors(
+            containerColor = Color(0xFFC8E0B4),
+            contentColor = Color.Black,
+            disabledContainerColor = Color(0xFFF78058),
+            disabledContentColor = Color.White
+        )
 //                .weight(1f)
     ) {
         Text(text)
@@ -162,10 +174,12 @@ fun SettingOptionItem(option: SettingsOptionUserProfile) {
                 modifier = Modifier
                     .size(60.dp)
                     .background(
-                        MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
-                        shape = CircleShape
+//                        MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
+                        Color(0xFFC8E0B4),
+                        shape = CircleShape,
                     ),
                 contentAlignment = Alignment.Center,
+//                backgroundColor = Color(0xFFC8E0B4)
                 ) {
                 option.icon()
             }

@@ -23,30 +23,35 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.authentication.R
 import com.example.authentication.ui.viewmodel.LoginViewModel
 //import com.cursokotlin.mvvmlogin.R
 import kotlinx.coroutines.launch
 
+import androidx.compose.material3.ButtonColors
+
+
 @Preview(showBackground = true)
 @Composable
 fun LoginScreenPreview() {
-    LoginScreen(viewModel =  LoginViewModel())
+    LoginScreen(viewModel =  LoginViewModel(), navController = rememberNavController())
 }
 
 @Composable
-fun LoginScreen(viewModel: LoginViewModel) {
+fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
     Box(
         Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Login(Modifier.align(Alignment.Center), viewModel)
+        Login(Modifier.align(Alignment.Center), viewModel, navController)
     }
 }
 
 @Composable
-fun Login(modifier: Modifier, viewModel: LoginViewModel) {
+fun Login(modifier: Modifier, viewModel: LoginViewModel, navController: NavController) {
 
     val email: String by viewModel.email.observeAsState(initial = "")
     val password: String by viewModel.password.observeAsState(initial = "")
@@ -68,34 +73,36 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel) {
             Spacer(modifier = Modifier.padding(8.dp))
             ForgotPassword(Modifier.align(Alignment.End))
             Spacer(modifier = Modifier.padding(16.dp))
-            LoginButton(loginEnable) {
-                coroutineScope.launch {
-                    viewModel.onLoginSelected()
-                }
-            }
+//            LoginButton(true, loginEnable, navController)
+            LoginButton(true, navController)
+//            {
+//                coroutineScope.launch {
+//                    viewModel.onLoginSelected()
+//                }
+//            }
         }
     }
 }
 
+//fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit, navController: NavController) {
 @Composable
-fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
+fun LoginButton(loginEnable: Boolean, navController: NavController) {
     Button(
-        onClick = { onLoginSelected() },
+        onClick = {
+//            onLoginSelected();
+                    navController.navigate("home");
+
+                  },
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp),
-        colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xFFFB9600),
+        colors = ButtonColors(
+            containerColor = Color(0xFFC8E0B4),
+            contentColor = Color.Black,
             disabledContainerColor = Color(0xFFF78058),
-            contentColor = Color.White,
             disabledContentColor = Color.White
-//            containerColor = Color(0xFFFF4303),
-////            backgroundColor = Color(0xFFFF4303),
-//            disabledContentColor = Color(0xFFF78058),
-////            disabledBackgroundColor = Color(0xFFF78058),
-//            contentcolor = Color.White,
-//            disabledContentColor = Color.White
-        ), enabled = loginEnable
+        ),
+        enabled = true
     ) {
         Text(text = "Iniciar sesión")
     }
@@ -108,7 +115,7 @@ fun ForgotPassword(modifier: Modifier) {
         modifier = modifier.clickable { },
         fontSize = 12.sp,
         fontWeight = FontWeight.Bold,
-        color = Color(0xFFFB9600)
+        color = Color.Black
     )
 }
 
@@ -158,4 +165,20 @@ fun HeaderImage(modifier: Modifier) {
 //        contentDescription = "Header",
 //        modifier = modifier
 //    )
+//    import androidx.compose.ui.text.buildAnnotatedString
+//    Text(
+//        text = buildAnnotatedString {
+//            withStyle(style = SpanStyle(color = Color.Blue, fontWeight = FontWeight.Bold)) {
+//                append("Paw")
+//            }
+//            append("Pal")
+//        },
+//        fontSize = 24.sp
+//    )
+    Text(
+        text = "PawPal",
+        fontSize = 34.sp,
+        fontWeight = FontWeight.Bold,
+        color = Color(0xFFC8E0B4)
+    )
 }

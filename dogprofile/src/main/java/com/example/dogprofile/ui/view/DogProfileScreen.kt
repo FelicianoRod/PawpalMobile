@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.CallMissedOutgoing
 import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
@@ -37,22 +38,25 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
 import com.example.dogprofile.ui.models.SettingOption
+import com.example.userprofile.ui.components.TopAppBarUserProfile
 
 
 @Preview(showBackground = true)
 @Composable
 fun DogProfileScreenPreview() {
-    DogProfileScreen()
+    DogProfileScreen(navController = rememberNavController())
 }
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-fun DogProfileScreen() {
+fun DogProfileScreen(navController: NavController) {
     val items = listOf(
         SettingOption(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Inf. basica", onClick = {}),
-        SettingOption(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Desparasitante", onClick = {}),
+        SettingOption(icon = { Icon(Icons.AutoMirrored.Filled.CallMissedOutgoing, contentDescription = null)}, text = "Desparasitante", onClick = {}),
         SettingOption(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Veterinario", onClick = {}),
         SettingOption(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Otros", onClick = {}),
         SettingOption(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Option 2", onClick = {}),
@@ -60,7 +64,7 @@ fun DogProfileScreen() {
     )
 
     Scaffold(
-//        topBar = { TopAppBarUserProfile() }
+        topBar = { TopAppBarUserProfile() }
     ) { innerPadding ->
         Column(
             modifier = Modifier.padding(innerPadding)
@@ -75,7 +79,9 @@ fun DogProfileScreen() {
                     .background(MaterialTheme.colorScheme.primary)
             ) {
                 Image(
-                    painter = rememberImagePainter(data = "https://stickerly.pstatic.net/sticker_pack/YIkMXfxwRMMvVMIoXINUA/YPR0TM/2/b73fd3d3-800c-4a7b-babf-43eafb8b23c7.png"),
+                    painter = rememberImagePainter(
+                        data = "https://t1.uc.ltmcdn.com/es/posts/8/7/8/cuanto_mide_un_perro_chihuahua_29878_600.jpg"
+                    ),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
                     modifier = Modifier.fillMaxSize()
@@ -84,13 +90,13 @@ fun DogProfileScreen() {
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Camila",
+                text = "Fifi",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
 
             Text(
-                text = "Cruza chihuahua",
+                text = "Chihuahua",
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color.Gray
             )
@@ -103,12 +109,12 @@ fun DogProfileScreen() {
                 Row(
 
                 ) {
-                    SettingOptionItem(text = "Inf. basica")
-                    SettingOptionItem(text = "Desparasitante")
-                    SettingOptionItem(text = "Veterinario")
+                    SettingOptionItem(text = "I. basica")
+                    SettingOptionItem(text = "Despar")
+                    SettingOptionItem(text = "Veterin")
                 }
                 Row() {
-                    SettingOptionItem(text = "Otros")
+                    SettingOptionItem(text = "Galería")
                     SettingOptionItem(text = "Otros")
                 }
                 Row() {
@@ -163,12 +169,16 @@ fun SettingOptionItem(text: String) {
         shape = RoundedCornerShape(16.dp),
 //        modifier = Modifi
         modifier = Modifier
-            .padding(4.dp)
+            .padding(9.dp)
 
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.size(100.dp).padding(20.dp)
+            modifier = Modifier.size(100.dp)
+                .background(
+                    Color(0xFFC8E0B4)
+                )
+                .padding(20.dp)
         ) {
             Icon(
                 imageVector = Icons.AutoMirrored.Filled.List,

@@ -7,7 +7,8 @@ val properties = Properties().apply {
 }
 
 plugins {
-    alias(libs.plugins.android.application)
+//    alias(libs.plugins.android.application)
+    alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
 }
 
@@ -24,11 +25,11 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.authentication"
+//        applicationId = "com.example.authentication"
         minSdk = 24
         targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
+//        versionCode = 1
+//        versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -67,10 +68,12 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
 }
 
 dependencies {
 
+    implementation(libs.androidx.navigation.compose)
     val ktorClientAndroidVersion: String = properties.getProperty("ktorClientAndroidVersion")
     val lifecycleViewmodelVersion: String = properties.getProperty("lifecycleViewmodelVersion")
 //    val gotruektVersion: String = properties.getProperty("gotrue-ktVersion")
