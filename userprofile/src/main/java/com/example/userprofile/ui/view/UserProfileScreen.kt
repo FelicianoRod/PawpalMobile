@@ -109,8 +109,8 @@ fun UserProfileScreen(navController: NavController) {
                 modifier = Modifier.fillMaxWidth()
             ) {
                 ActionButton("Caninos")
-                ActionButton("Pagos")
                 ActionButton("Notific.")
+                ActionButton("Otros.")
             }
 
             Spacer(modifier = Modifier.height(24.dp))

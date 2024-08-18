@@ -89,21 +89,21 @@ fun DrawerSection(navController: NavController) {
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
             Spacer(modifier = Modifier.height(32.dp))
-            Row() {
-                Spacer(modifier = Modifier.width(16.dp))
-                Text(text = "Comunidad")
-            }
-            Spacer(modifier = Modifier.height(16.dp))
-            DrawerItem(
-                icon = Icons.Default.Forum,
-                label = "Foro",
-                notificationCount = 1,
-            )
-            Divider(
-                color = Color.Gray,
-                thickness = 1.dp,
-                modifier = Modifier.padding(horizontal = 16.dp),
-            )
+//            Row() {
+//                Spacer(modifier = Modifier.width(16.dp))
+//                Text(text = "Comunidad")
+//            }
+//            Spacer(modifier = Modifier.height(16.dp))
+//            DrawerItem(
+//                icon = Icons.Default.Forum,
+//                label = "Foro",
+//                notificationCount = 1,
+//            )
+//            Divider(
+//                color = Color.Gray,
+//                thickness = 1.dp,
+//                modifier = Modifier.padding(horizontal = 16.dp),
+//            )
         }
     }
 }
