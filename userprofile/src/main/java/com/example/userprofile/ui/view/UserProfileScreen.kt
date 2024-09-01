@@ -97,7 +97,7 @@ fun UserProfileScreen(navController: NavController) {
             )
 
             Text(
-                text = "Amante canino",
+                text = "Usuario Pawpal",
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color.Gray
             )
