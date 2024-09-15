@@ -7,7 +7,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.authentication.ui.view.LoginScreen
+import com.example.authentication.ui.view.SignUpScreen
 import com.example.authentication.ui.viewmodel.LoginViewModel
+import com.example.authentication.ui.viewmodel.SignUpViewModel
 import com.example.dogprofile.ui.view.DogProfileScreen
 import com.example.home.ui.view.HomeScreen
 import com.example.pawpal.screens.FirstScreen
@@ -34,11 +36,17 @@ fun AppNavigation() {
         composable(route = AppScreens.SplashScreen.route) {
             SplashScreen(navController)
         }
-        // Login
+
+        // Auth
         composable(route = AppScreens.LoginScreen.route) {
             val loginViewModel: LoginViewModel = LoginViewModel()
             LoginScreen(loginViewModel, navController)
         }
+        composable(route = AppScreens.SignUpScreen.route) {
+            val signUpViewModel: SignUpViewModel = SignUpViewModel()
+            SignUpScreen(signUpViewModel, navController)
+        }
+
         // Home
         composable(route = AppScreens.HomeScreen.route) {
             HomeScreen(navController)

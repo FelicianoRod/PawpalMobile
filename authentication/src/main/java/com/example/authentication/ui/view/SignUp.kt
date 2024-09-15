@@ -6,54 +6,38 @@ import android.webkit.WebChromeClient
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalMapOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import com.example.authentication.ui.model.SignUpUiState
-import com.example.authentication.ui.partials.ButtonCustom
-import com.example.authentication.ui.partials.TextFieldCustom
+import androidx.navigation.NavController
+import com.example.authentication.ui.model.SignUpStateUiModel
+import com.example.authentication.ui.components.ButtonCustom
+import com.example.authentication.ui.components.TextFieldCustom
 import com.example.authentication.ui.viewmodel.SignUpViewModel
-import io.github.jan.supabase.SupabaseClient
-
-import io.github.jan.supabase.gotrue.auth
-import io.github.jan.supabase.gotrue.providers.builtin.Email
-import kotlinx.coroutines.launch
 
 @Preview(showBackground = true)
 @Composable
 fun SignUpScreenPreview() {
-    SignUpScreen(viewModel = SignUpViewModel())
+    SignUpScreen(viewModel = SignUpViewModel(), navController = NavController(LocalContext.current))
 }
 
 @Composable
-fun SignUpScreen(viewModel: SignUpViewModel) {
+fun SignUpScreen(viewModel: SignUpViewModel, navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -64,6 +48,7 @@ fun SignUpScreen(viewModel: SignUpViewModel) {
 }
 
 //@SuppressLint("SuspiciousIndentation")
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun SignUp(viewModel: SignUpViewModel) {
 
@@ -74,7 +59,7 @@ fun SignUp(viewModel: SignUpViewModel) {
 //    val isLoading: Boolean by viewModel.isLoading.observeAsState(initial = false)
 //    val coroutineScope = rememberCoroutineScope()
 
-    val signUpUiState = viewModel.signUpUiState.observeAsState(SignUpUiState()).value
+    val signUpUiState = viewModel.signUpUiState.observeAsState(SignUpStateUiModel()).value
 
 //    if (isLoading) {
 //        Box(Modifier.fillMaxSize()) {
@@ -99,8 +84,10 @@ fun SignUp(viewModel: SignUpViewModel) {
                 fontWeight = FontWeight.Bold,
                 color = Color.Black
             )
-            val iframe = "https://my.spline.design/untitled-7b879b3e1fd8134bb77688395144531b/"
-            Show3DDesign(url = iframe)
+//            val iframe = "https://my.spline.design/untitled-7b879b3e1fd8134bb77688395144531b/"
+//            Show3DDesign(url = iframe)
+
+
 //            WebView()
 //            Spacer(modifier = Modifier.padding(16.dp))
 //            EmailFieldSU(email) { viewModel.onSignUpChanged(it, password, confirmPassword) }
@@ -110,6 +97,18 @@ fun SignUp(viewModel: SignUpViewModel) {
 //            ConfirmPasswordFieldSU(confirmPassword) { viewModel.onSignUpChanged(email, password, it) }
 //            Spacer(modifier = Modifier.padding(16.dp))
 //            SignUpButton(false)
+            NameSignUpField(
+                value = signUpUiState.name,
+                onValueChanged = { viewModel.onNameChange(it) },
+                isError = false,
+                supportingText = emptyList()
+            )
+            LastNameSignUpField(
+                value = signUpUiState.lastName,
+                onValueChanged = { viewModel.onLastName(it) },
+                isError = false,
+                supportingText = emptyList()
+            )
             EmailSignUpField(
                 value = signUpUiState.email,
                 onValueChanged = { viewModel.onEmailChange(it);
@@ -132,7 +131,43 @@ fun SignUp(viewModel: SignUpViewModel) {
                 supportingText = signUpUiState.confirmPasswordErrorList
             )
             SignUpButton(signUpUiState.validForm)
+
+            Button(onClick = { viewModel.signUpButton() }) {
+                Text(text = "Registrarse")
+            }
         }
+}
+
+@Composable
+fun NameSignUpField(
+    value: String,
+    onValueChanged: (String) -> Unit,
+    isError: Boolean,
+    supportingText: List<String>
+) {
+    TextFieldCustom(
+        value = value,
+        onValueChanged = onValueChanged,
+        label = "Nombre",
+        isError = isError,
+        supportingText = supportingText
+    )
+}
+
+@Composable
+fun LastNameSignUpField(
+    value: String,
+    onValueChanged: (String) -> Unit,
+    isError: Boolean,
+    supportingText: List<String>
+) {
+    TextFieldCustom(
+        value = value,
+        onValueChanged = onValueChanged,
+        label = "Apellido",
+        isError = isError,
+        supportingText = supportingText
+    )
 }
 
 @Composable

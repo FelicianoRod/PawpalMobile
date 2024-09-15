@@ -27,3 +27,4 @@ include(":userprofile")
 include(":dogprofile")
 
 // Realizando cambios
+include(":core")

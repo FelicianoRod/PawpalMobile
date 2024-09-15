@@ -1,16 +1,16 @@
 package com.example.authentication.ui.viewmodel
 
+import android.util.Log
 import android.util.Patterns
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.runtime.toMutableStateList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.authentication.ui.model.SignUpUiState
+import androidx.lifecycle.viewModelScope
+import com.example.authentication.domain.viewmodel.signUpWithEmail
+import com.example.authentication.ui.model.SignUpStateUiModel
+import kotlinx.coroutines.launch
 
 class SignUpViewModel: ViewModel() {
 //    private val _email = MutableLiveData<String>()
@@ -68,29 +68,43 @@ class SignUpViewModel: ViewModel() {
 //        }
 //    }
 
-    // Estado
-    private val _signUpUiState = MutableLiveData(SignUpUiState())
-    val signUpUiState: LiveData<SignUpUiState> = _signUpUiState
+    // State
+    private val _signUpUiState = MutableLiveData(SignUpStateUiModel())
+    val signUpUiState: LiveData<SignUpStateUiModel> = _signUpUiState
 
-    // Eventos
+    // Events
+    fun onNameChange(name: String) {
+        val currentState = _signUpUiState.value ?: SignUpStateUiModel()
+        _signUpUiState.value = currentState.copy(name = name)
+    }
+
+    fun onLastName(lastName: String) {
+        val currentState = _signUpUiState.value ?: SignUpStateUiModel()
+        _signUpUiState.value = currentState.copy(lastName = lastName)
+    }
+
     fun onEmailChange(email: String) {
-        val currentState = _signUpUiState.value ?: SignUpUiState()
+        val currentState = _signUpUiState.value ?: SignUpStateUiModel()
         _signUpUiState.value = currentState.copy(email = email)
     }
 
     fun onPasswordChange(password: String) {
-        val currentState = _signUpUiState.value ?: SignUpUiState()
+        val currentState = _signUpUiState.value ?: SignUpStateUiModel()
         _signUpUiState.value = currentState.copy(password = password)
     }
 
     fun onConfirmPasswordChange(confirmPassword: String) {
-        val currentState = _signUpUiState.value ?: SignUpUiState()
+        val currentState = _signUpUiState.value ?: SignUpStateUiModel()
         _signUpUiState.value = currentState.copy(confirmPassword = confirmPassword)
     }
 
-    // Validaciones
+    // Validations
+//    fun validateName(name: String) {
+//
+//    }
+
     fun validateEmail(email: String) {
-        val currentState = _signUpUiState.value ?: SignUpUiState()
+        val currentState = _signUpUiState.value ?: SignUpStateUiModel()
         val errors = mutableStateListOf<String>()
         val validForm: Boolean
 
@@ -122,7 +136,7 @@ class SignUpViewModel: ViewModel() {
     }
 
     fun validatePassword(password: String, confirmPassword: String) {
-        val currentState = _signUpUiState.value ?: SignUpUiState()
+        val currentState = _signUpUiState.value ?: SignUpStateUiModel()
         val errors = mutableStateListOf<String>()
         val validForm: Boolean
         val updateErrorList = currentState.confirmPasswordErrorList.toMutableStateList()
@@ -163,7 +177,7 @@ class SignUpViewModel: ViewModel() {
     }
 
     fun validateConfirmPassword(confirmPassword: String) {
-        val currentState = _signUpUiState.value ?: SignUpUiState()
+        val currentState = _signUpUiState.value ?: SignUpStateUiModel()
         val errors = mutableStateListOf<String>()
         val validForm: Boolean
 
@@ -196,5 +210,20 @@ class SignUpViewModel: ViewModel() {
                 confirmPasswordErrorList = errors
             )
         }
+    }
+
+    fun signUpButton() {
+//        SignUpWithEmailUi(email = signUpUiState.value?.email ?: "", password = signUpUiState.value?.password ?: "")
+        signUpWithEmailUi(email = "emilioperez232323@gmail.com", password = "emilio232323")
+    }
+
+     private fun signUpWithEmailUi(email: String, password: String) {
+         try {
+            viewModelScope.launch {
+                signUpWithEmail(email = email, password = password)
+            }
+         } catch (e: Exception) {
+             Log.e("SignUpWithEmail", "Error during sign up - view", e)
+         }
     }
 }

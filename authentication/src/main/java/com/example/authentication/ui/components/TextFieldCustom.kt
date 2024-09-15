@@ -1,4 +1,4 @@
-package com.example.authentication.ui.partials
+package com.example.authentication.ui.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth

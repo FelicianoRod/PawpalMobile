@@ -74,8 +74,8 @@ android {
 dependencies {
 
     implementation(libs.androidx.navigation.compose)
-    val ktorClientAndroidVersion: String = properties.getProperty("ktorClientAndroidVersion")
-    val lifecycleViewmodelVersion: String = properties.getProperty("lifecycleViewmodelVersion")
+//    val ktorClientAndroidVersion: String = properties.getProperty("ktorClientAndroidVersion")
+//    val lifecycleViewmodelVersion: String = properties.getProperty("lifecycleViewmodelVersion")
 //    val gotruektVersion: String = properties.getProperty("gotrue-ktVersion")
 
 
@@ -85,11 +85,24 @@ dependencies {
 
 
 //    implementation("io.github.jan-tennert.supabase:gotrue-kt:$gotrueVersion")
-    implementation("io.github.jan-tennert.supabase:gotrue-kt:2.5.3")
 
 //    implementation("io.ktor:ktor-client-android:$ktorClientAndroidVersion")
-    implementation("io.ktor:ktor-client-cio:2.3.12")
-    implementation("androidx.lifecycle:lifecycle-viewmodel:2.8.4")
+//    implementation(libs.io.github.jan.tennet.supabase.gotrue.kt)
+//    implementation(libs.io.ktor.client.cio)
+//    implementation(libs.androidx.lifecycle.viewmodel.compose)
+//    implementation("io.github.jan-tennert.supabase:gotrue-kt:2.5.3")
+//    implementation("io.ktor:ktor-client-cio:2.3.12")
+//    implementation("androidx.lifecycle:lifecycle-viewmodel:2.8.4")
+
+    implementation(project(":core"))
+
+//   Supabase
+    implementation(platform(libs.io.github.jan.tennert.supabase.bom))
+    implementation(libs.io.github.jan.tennert.supabase.postgrest.kt)
+    implementation(libs.io.github.jan.tennert.supabase.gotrue.kt)
+    implementation(libs.io.github.jan.tennert.supabase.realtime.kt)
+//  Ktor
+    implementation(libs.io.ktor.client.android)
 
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
     implementation ("androidx.compose.runtime:runtime-livedata:1.2.1")

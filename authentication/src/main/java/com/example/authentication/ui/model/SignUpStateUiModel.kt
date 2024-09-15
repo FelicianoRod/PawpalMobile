@@ -3,7 +3,13 @@ package com.example.authentication.ui.model
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 
-data class SignUpUiState(
+data class SignUpStateUiModel(
+
+    // Name
+    val name: String = "",
+
+    // lastName
+    val lastName: String = "",
 
     // Email
     val email: String = "",
