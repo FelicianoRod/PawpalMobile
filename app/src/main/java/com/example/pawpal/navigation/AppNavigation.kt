@@ -15,7 +15,10 @@ import com.example.home.ui.view.HomeScreen
 import com.example.pawpal.screens.FirstScreen
 import com.example.pawpal.screens.SecondScreen
 import com.example.pawpal.ui.view.SplashScreen
+import com.example.userprofile.ui.view.ProfileScreen
 import com.example.userprofile.ui.view.UserProfileScreen
+import com.example.userprofile.ui.viewmodel.ProfileStateViewModel
+import com.example.userprofile.ui.viewmodel.UserProfileStateViewModel
 
 @Composable
 fun AppNavigation() {
@@ -53,8 +56,15 @@ fun AppNavigation() {
         }
         // UserProfile
         composable(route = AppScreens.UserProfileScreen.route) {
-            UserProfileScreen(navController)
+            val userProfileViewModel = UserProfileStateViewModel()
+            userProfileViewModel.getUserProfileState()
+            UserProfileScreen(navController, userProfileViewModel)
         }
+
+        composable(route = AppScreens.ProfileScreen.route) {
+            ProfileScreen(viewModel = ProfileStateViewModel(), navController)
+        }
+
         // DogProfile
         composable(route = AppScreens.DogProfileScreen.route) {
             DogProfileScreen(navController)

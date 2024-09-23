@@ -96,13 +96,12 @@ dependencies {
 
     implementation(project(":core"))
 
-//   Supabase
-    implementation(platform(libs.io.github.jan.tennert.supabase.bom))
-    implementation(libs.io.github.jan.tennert.supabase.postgrest.kt)
-    implementation(libs.io.github.jan.tennert.supabase.gotrue.kt)
-    implementation(libs.io.github.jan.tennert.supabase.realtime.kt)
+
 //  Ktor
     implementation(libs.io.ktor.client.android)
+
+//    Securiry State
+//    implementation(libs.androidx.security.state)
 
     implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
     implementation ("androidx.compose.runtime:runtime-livedata:1.2.1")
@@ -118,6 +117,11 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    //   Supabase
+    implementation(platform(libs.io.github.jan.tennert.supabase.bom))
+    implementation(libs.io.github.jan.tennert.supabase.postgrest.kt)
+    implementation(libs.io.github.jan.tennert.supabase.gotrue.kt)
+    implementation(libs.io.github.jan.tennert.supabase.realtime.kt)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

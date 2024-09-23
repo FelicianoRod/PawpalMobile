@@ -17,6 +17,13 @@ lifecycleviewmodelcomposeVersion = "2.6.2"
 # Supabase
 supabaseVersion = "2.6.1"
 ktorClientEngineVersion = "2.3.12"
+securityStateVersion = "1.0.0-alpha04"
+securityCryptoKtx = "1.1.0-alpha06"
+kotlinxSerializationJsonVersion = "1.5.0"
+
+#plugins
+serialization = "2.0.20"
+
 
 
 [libraries]
@@ -53,10 +60,15 @@ io-github-jan-tennert-supabase-gotrue-kt = { group = "io.github.jan-tennert.supa
 io-github-jan-tennert-supabase-realtime-kt = { group = "io.github.jan-tennert.supabase", name = "realtime-kt" }
 # Ktor
 io-ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktorClientEngineVersion"}
-
-
+# Security-State
+androidx-security-state = { group = "androidx.security", name = "security-state", version.ref = "securityStateVersion"}
+androidx-security-crypto-ktx = { group = "androidx.security", name = "security-crypto-ktx", version.ref = "securityCryptoKtx" }
+# Serialization-json
+org-jetbrains-kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinxSerializationJsonVersion"}
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serialization"}
 

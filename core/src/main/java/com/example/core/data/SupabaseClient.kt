@@ -1,9 +1,7 @@
-package com.example.authentication.data.repository.supabase
+package com.example.core.data
 
-import com.example.authentication.BuildConfig
 import io.github.jan.supabase.createSupabaseClient
 import io.github.jan.supabase.gotrue.Auth
-import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.Postgrest
 //import io.github.jan.supabase.gotrue.GoTrue
 

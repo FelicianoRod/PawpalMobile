@@ -1,8 +1,8 @@
 package com.example.userprofile.ui.view
 
-//import androidx.compose.foundation.Image
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -20,123 +20,151 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
-import com.example.userprofile.ui.components.TopAppBarUserProfile
+import com.example.core.ui.components.DrawerContent
+import com.example.core.ui.theme.PawpalTheme
+import com.example.core.ui.components.TopAppBarPrimary
+import com.example.userprofile.R
 import com.example.userprofile.ui.models.SettingsOptionUserProfile
-import kotlinx.coroutines.launch
+import com.example.userprofile.ui.viewmodel.UserProfileStateViewModel
 
 
 @Preview(showBackground = true)
 @Composable
 fun UserProfileScreenPreview() {
-    UserProfileScreen(navController = rememberNavController())
+    UserProfileScreen(navController = rememberNavController(), viewModel = UserProfileStateViewModel())
 }
 
 @Composable
-fun UserProfileScreen(navController: NavController) {
+fun UserProfileScreen(navController: NavController, viewModel: UserProfileStateViewModel) {
+
+    val name by viewModel.name.collectAsState()
+    val biography by viewModel.biography.collectAsState()
+    val avatarUrl by viewModel.avatarUrl.collectAsState()
+
     val options = listOf(
-        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Editar perfil"),
-        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Mi estatus"),
-        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Ajustes"),
-        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Invitar a un amigo"),
-        SettingsOptionUserProfile(icon = { Icon(Icons.AutoMirrored.Filled.List, contentDescription = null)}, text = "Ayuda"),
+        SettingsOptionUserProfile(
+            icon = R.drawable.profile,
+            text = "Perfil",
+            route = ({ navController.navigate("profile_screen") }),
+        ),
+        SettingsOptionUserProfile(
+            icon = R.drawable.appareance,
+            text = "Apariencia",
+            route = ({ navController.navigate("profile_screen") }),
+        ),
+        SettingsOptionUserProfile(
+            icon = R.drawable.profile,
+            text = "Notificaciones",
+            route = ({ navController.navigate("profile_screen") }),
+        ),
+        SettingsOptionUserProfile(
+            icon = R.drawable.profile,
+            text = "Visualización",
+            route = ({ navController.navigate("profile_screen") }),
+        )
     )
 
-    Scaffold(
-        topBar = { TopAppBarUserProfile() }
-    ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding)
-                .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ){
-            Box(
-                modifier = Modifier
-                    .size(120.dp)
-                    .clip(CircleShape)
-                    .background(MaterialTheme.colorScheme.primary)
-            ) {
-                Image(
-                    painter = rememberImagePainter(
-                        data = "https://media.istockphoto.com/id/1311957094/es/foto/guapo-joven-sonriente-con-retrato-de-brazos-cruzados.jpg?s=612x612&w=0&k=20&c=x5LVA3-Y4WCfJmz6FzGTjXYv4tB1HPVkLuhLqcj8g6Q="
-                    ),
-                    contentDescription = null,
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize()
-                )
-            }
-            Spacer(modifier = Modifier.height(16.dp))
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
 
-            Text(
-                text = "Edgar Hurtado",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold
-            )
-
-            Text(
-                text = "Usuario Pawpal",
-                style = MaterialTheme.typography.headlineMedium,
-                color = Color.Gray
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Row(
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                ActionButton("Caninos")
-                ActionButton("Notific.")
-                ActionButton("Otros.")
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-//            Column() {
-//                options.forEach { option ->
-//                    SettingOptionItem(option = option)
-//                }
-//            }
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-//                    .background(Color.Gray)
-                    .padding(8.dp),
-
-            ) {
-                items(options) { option ->
-                    SettingOptionItem(option = option)
+    PawpalTheme {
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = {
+                ModalDrawerSheet {
+                    DrawerContent(navController)
                 }
+            },
+        ) {
+            Scaffold(
+                topBar = { TopAppBarPrimary("Cuenta", drawerState, scope) }
+            ) { innerPadding ->
+                Column(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(120.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primary)
+                    ) {
+                        Image(
+                            painter = rememberImagePainter(
+                                data = avatarUrl
+                            ),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = name,
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                    Text(
+                        text = biography,
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = Color.Gray,
+                        textAlign = TextAlign.Center
 
-
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        ActionButton("Caninos")
+                        ActionButton("Notific.")
+                        ActionButton("Otros.")
+                    }
+                    Spacer(modifier = Modifier.height(24.dp))
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                        ) {
+                        items(options) { option ->
+                            SettingOptionItem(option = option)
+                        }
+                    }
+                }
             }
         }
-
     }
-
 }
 
 @Composable
@@ -153,7 +181,6 @@ fun ActionButton(text: String) {
             disabledContainerColor = Color(0xFFF78058),
             disabledContentColor = Color.White
         )
-//                .weight(1f)
     ) {
         Text(text)
     }
@@ -166,6 +193,10 @@ fun SettingOptionItem(option: SettingsOptionUserProfile) {
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxWidth()
+            .clickable(onClick = { option.route() })
+            .clip(RoundedCornerShape(16.dp))
+            .background(color = MaterialTheme.colorScheme.surface)
+            .padding(8.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -174,23 +205,24 @@ fun SettingOptionItem(option: SettingsOptionUserProfile) {
                 modifier = Modifier
                     .size(60.dp)
                     .background(
-//                        MaterialTheme.colorScheme.primary.copy(alpha = 0.2f),
                         Color(0xFFC8E0B4),
                         shape = CircleShape,
                     ),
                 contentAlignment = Alignment.Center,
-//                backgroundColor = Color(0xFFC8E0B4)
-                ) {
-                option.icon()
+            ) {
+                Image(
+                    painter = painterResource(option.icon),
+                    contentDescription = "Perfil",
+                    modifier = Modifier.size(40.dp)
+                )
             }
             Spacer(modifier = Modifier.width(16.dp))
             Text(text = option.text)
-
         }
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(imageVector = Icons.AutoMirrored.Default.ArrowForward, contentDescription = "Ir" )
+            Icon(imageVector = Icons.AutoMirrored.Default.ArrowForward, contentDescription = "Ir")
         }
     }
     Spacer(modifier = Modifier.height(8.dp))

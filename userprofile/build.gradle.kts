@@ -2,6 +2,7 @@ plugins {
 //    alias(libs.plugins.android.application)
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.serialization)
 }
 
 android {
@@ -51,6 +52,9 @@ android {
 }
 
 dependencies {
+
+    implementation(project(":core"))
+
     // Cargar imagenes
     implementation(libs.io.coil.kt.coil)
 
@@ -65,6 +69,14 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    //   Supabase
+    implementation(platform(libs.io.github.jan.tennert.supabase.bom))
+    implementation(libs.io.github.jan.tennert.supabase.postgrest.kt)
+    implementation(libs.io.github.jan.tennert.supabase.gotrue.kt)
+    implementation(libs.io.github.jan.tennert.supabase.realtime.kt)
+    implementation(libs.org.jetbrains.kotlinx.serialization.json)
+    implementation(libs.androidx.compose.material.icons.extended)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -51,6 +51,9 @@ android {
 }
 
 dependencies {
+
+    implementation(project(":core"))
+
     // Iconos
     implementation(libs.androidx.compose.material.icons.extended)
 
