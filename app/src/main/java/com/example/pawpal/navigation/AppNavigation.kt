@@ -10,6 +10,7 @@ import com.example.authentication.ui.view.LoginScreen
 import com.example.authentication.ui.view.SignUpScreen
 import com.example.authentication.ui.viewmodel.LoginViewModel
 import com.example.authentication.ui.viewmodel.SignUpViewModel
+import com.example.dogprofile.ui.view.AddDogScreen
 import com.example.dogprofile.ui.view.DogProfileScreen
 import com.example.home.ui.view.HomeScreen
 import com.example.pawpal.screens.FirstScreen
@@ -68,6 +69,10 @@ fun AppNavigation() {
         // DogProfile
         composable(route = AppScreens.DogProfileScreen.route) {
             DogProfileScreen(navController)
+        }
+
+        composable(route = AppScreens.AddDogScreen.route) {
+            AddDogScreen()
         }
 
 
