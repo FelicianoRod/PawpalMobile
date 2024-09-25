@@ -1,17 +1,15 @@
 plugins {
-//    alias(libs.plugins.android.application)
     alias(libs.plugins.android.library)
+//    alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.serialization)
-
 }
 
 android {
-    namespace = "com.example.dogprofile"
+    namespace = "com.example.core"
     compileSdk = 34
 
     defaultConfig {
-//        applicationId = "com.example.dogprofile"
+//        applicationId = "com.example.core"
         minSdk = 24
         targetSdk = 34
 //        versionCode = 1
@@ -53,14 +51,14 @@ android {
 }
 
 dependencies {
-
-    implementation(project(":core"))
-
-    implementation(libs.io.coil.kt.coil)
+//    Icons
     implementation(libs.androidx.compose.material.icons.extended)
 
-    // Navegación
+//    Navigation
     implementation(libs.androidx.navigation.compose)
+
+    implementation(libs.androidx.security.crypto.ktx)
+
 
 
     implementation(libs.androidx.core.ktx)
@@ -71,16 +69,11 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(project(":userprofile"))
-//    Setialization
-    implementation(libs.org.jetbrains.kotlinx.serialization.json)
-
     //   Supabase
     implementation(platform(libs.io.github.jan.tennert.supabase.bom))
     implementation(libs.io.github.jan.tennert.supabase.postgrest.kt)
     implementation(libs.io.github.jan.tennert.supabase.gotrue.kt)
     implementation(libs.io.github.jan.tennert.supabase.realtime.kt)
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
