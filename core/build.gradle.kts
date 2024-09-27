@@ -69,6 +69,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
     //   Supabase
     implementation(platform(libs.io.github.jan.tennert.supabase.bom))
     implementation(libs.io.github.jan.tennert.supabase.postgrest.kt)

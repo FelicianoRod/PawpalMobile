@@ -23,10 +23,10 @@ fun TextFieldForm(
     label: String,
     placeholder: String,
     supportingText: String = "",
-    errorList: List<String>,
-    isError: Boolean,
+    errorList: List<String> = listOf(),
+    isError: Boolean = false,
 //    keyboardOptions: KeyboardOptions,
-    keyboardType: KeyboardType,
+    keyboardType: KeyboardType = KeyboardType.Text,
     trailingIcon: @Composable (() -> Unit)? = null,
 
     ) {

@@ -20,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,16 +28,21 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 //import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -46,8 +52,13 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.core.ui.components.DrawerContent
 import com.example.core.ui.components.TextFieldForm
+import com.example.core.ui.components.TopAppBarSecondary
 import com.example.core.ui.theme.PawpalTheme
+import com.example.dogprofile.ui.viewmodel.AddDogState
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -55,32 +66,51 @@ import java.util.Locale
 @Preview(showBackground = true)
 @Composable
 fun AddNewDogScreenPreview() {
-    AddDogScreen()
+    AddDogScreen(navController = rememberNavController(), viewModel = AddDogState())
 }
 
 @Composable
-fun AddDogScreen() {
+fun AddDogScreen(navController: NavController, viewModel: AddDogState) {
+
+    val dogFormState by viewModel.dogFormState.collectAsState()
+
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
+    val scope = rememberCoroutineScope()
+
     PawpalTheme {
-        Scaffold() { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .padding(innerPadding)
-                    .fillMaxSize()
-                    .padding(16.dp),
-            ) {
-                Text(
-                    text = "Añadir mascota",
-                    style = MaterialTheme.typography.titleLarge,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Text(
-                    text = "Añade la información de tu mascota a continuación.",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray
-                )
-                Spacer(modifier = Modifier.padding(8.dp))
-//                NameDogField()
-                TextFieldCustom()
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = {
+                ModalDrawerSheet {
+                    DrawerContent(navController)
+                }
+            },
+        ) {
+            Scaffold(
+                topBar = { TopAppBarSecondary("Añadir mascota", navController) }
+            ) { innerPadding ->
+                Column(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .fillMaxSize()
+                        .padding(16.dp),
+                ) {
+//                    Text(
+//                        text = "Añadir mascota",
+//                        style = MaterialTheme.typography.titleLarge,
+//                        color = MaterialTheme.colorScheme.primary
+//                    )
+                    Text(
+                        text = "Añade la información de tu mascota a continuación.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Gray
+                    )
+                    Spacer(modifier = Modifier.padding(8.dp))
+                    NameDogField(
+                        value = dogFormState.name,
+                        onValueChange = { viewModel.onNameChanged(it) }
+                        )
+//                    TextFieldCustom()
 //                var isChecked by remember { mutableStateOf(false) }
 //
 //                Row {
@@ -91,23 +121,29 @@ fun AddDogScreen() {
 //                        onCheckedChange = { isChecked = it }
 //                    )
 //                }
-                Spacer(modifier = Modifier.padding(8.dp))
-                IsOwnerField()
-                Spacer(modifier = Modifier.padding(8.dp))
-                BirthdateField()
-                Spacer(modifier = Modifier.padding(8.dp))
-                GenderField()
-                Spacer(modifier = Modifier.padding(8.dp))
-                BreedField()
-                Spacer(modifier = Modifier.padding(8.dp))
-//                DescriptionField()
-                Spacer(modifier = Modifier.padding(8.dp))
-                WeightField()
-                Spacer(modifier = Modifier.padding(8.dp))
-                TagsDogField()
+                    Spacer(modifier = Modifier.padding(8.dp))
+                    IsOwnerField()
+                    Spacer(modifier = Modifier.padding(8.dp))
+                    BirthdateField()
+                    Spacer(modifier = Modifier.padding(8.dp))
+                    GenderField()
+                    Spacer(modifier = Modifier.padding(8.dp))
+                    BreedField()
+                    Spacer(modifier = Modifier.padding(8.dp))
+                    DescriptionField(
+                        value = dogFormState.description,
+                        onValueChanged = { viewModel.onDescriptionChanged(it) }
+                    )
+                    Spacer(modifier = Modifier.padding(8.dp))
+                    WeightField(
+                        value = dogFormState.weight.toString(),
+                        onValueChanged = { viewModel.onWeightChanged(it.toDouble()) }
+                    )
+                    Spacer(modifier = Modifier.padding(8.dp))
+                    TagsDogField()
 
 
-
+                }
             }
         }
     }
@@ -202,38 +238,32 @@ fun NameDogField(
         errorList = listOf(),
         isError = false,
         keyboardType = KeyboardType.Text,
-
     )
 }
 
 @Composable
-fun WeightField() {
-    Text(
-        text = "Peso de la mascota",
-        style = MaterialTheme.typography.bodyLarge
-    )
-    OutlinedTextField(
-        value = "",
-        onValueChange = { },
-        label = { Text("0.0 kg") },
-        modifier = Modifier
-            .fillMaxWidth()
+fun WeightField(
+    value: String,
+    onValueChanged: (String) -> Unit
+) {
+    TextFieldForm(
+        value = value,
+        onValueChange = onValueChanged,
+        label = "Peso",
+        placeholder= "5.5"
     )
 }
 
 @Composable
-fun DescriptionField() {
-    Text(
-        text = "Detalla a tu mascota",
-        style = MaterialTheme.typography.bodyLarge
-    )
-    OutlinedTextField(
-        value = "",
-        onValueChange = { },
-        label = { Text("Añade una descripción de tu mascota") },
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(100.dp)
+fun DescriptionField(
+    value: String,
+    onValueChanged: (String) -> Unit
+) {
+    TextFieldForm(
+        value = value,
+        onValueChange = onValueChanged,
+        label = "Detalla a tu mascota",
+        placeholder = "Añade una descripción de tu mascota"
     )
 }
 
@@ -401,12 +431,12 @@ fun IsOwnerField() {
     }
 }
 
-@Composable
-fun TextFieldCustom() {
-    OutlinedTextField(
-        value = "",
-        onValueChange = { },
-        label = { Text("Ingrese el nombre de su mascota") },
-        modifier = Modifier.fillMaxWidth()
-    )
-}
+//@Composable
+//fun TextFieldCustom() {
+//    OutlinedTextField(
+//        value = "",
+//        onValueChange = { },
+//        label = { Text("Ingrese el nombre de su mascota") },
+//        modifier = Modifier.fillMaxWidth()
+//    )
+//}

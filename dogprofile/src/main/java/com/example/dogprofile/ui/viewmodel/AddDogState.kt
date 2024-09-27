@@ -29,5 +29,30 @@ class AddDogState() : ViewModel() {
         _dogFormState.value = currentState.copy(birthdate = birthdate)
     }
 
+    fun onGenderChanged(gender: String) {
+        val currentState = _dogFormState.value
+        _dogFormState.value = currentState.copy(gender = gender)
+    }
+
+    fun onDescriptionChanged(description: String) {
+        val currentState = _dogFormState.value
+        _dogFormState.value = currentState.copy(description = description)
+    }
+
+    fun onWeightChanged(weight: Double) {
+        val currentState = _dogFormState.value
+        _dogFormState.value = currentState.copy(weight = weight)
+    }
+
+    fun onTagsChanged(tags: List<String>) {
+        val currentState = _dogFormState.value
+        _dogFormState.value = currentState.copy(tags = tags)
+    }
+
+    fun onImageUrlChanged(imageUrl: String) {
+        val currentState = _dogFormState.value
+        _dogFormState.value = currentState.copy(imageUrl = imageUrl)
+    }
+
 
 }
