@@ -4,17 +4,17 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Dog (
-    val id: Int,
+    val id: Int? = null,
     val profile_id: String,
     val breed_id: Int,
     val name: String,
-    val birthdate: String,
+    val birthdate: String? = null,
     val gender: String,
-    val create_at: String,
-    val image_url: String,
-    val tags: String,
-    val owner_name: String,
+    val create_at: String? = null,
+    val image_url: String? = null,
+    val tags: String? = null,
+    val owner_name: String? = null,
     val description: String,
-    val health: String,
+    val health: String? = null,
     val weight: Double
 )

@@ -15,15 +15,21 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 //import androidx.compose.material3.IconButton
@@ -34,11 +40,14 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -58,6 +67,7 @@ import com.example.core.ui.components.DrawerContent
 import com.example.core.ui.components.TextFieldForm
 import com.example.core.ui.components.TopAppBarSecondary
 import com.example.core.ui.theme.PawpalTheme
+import com.example.dogprofile.domain.Breed
 import com.example.dogprofile.ui.viewmodel.AddDogState
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -77,6 +87,8 @@ fun AddDogScreen(navController: NavController, viewModel: AddDogState) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
+    val scrollState = rememberScrollState()
+
     PawpalTheme {
         ModalNavigationDrawer(
             drawerState = drawerState,
@@ -93,6 +105,7 @@ fun AddDogScreen(navController: NavController, viewModel: AddDogState) {
                     modifier = Modifier
                         .padding(innerPadding)
                         .fillMaxSize()
+                        .verticalScroll(scrollState)
                         .padding(16.dp),
                 ) {
 //                    Text(
@@ -122,13 +135,26 @@ fun AddDogScreen(navController: NavController, viewModel: AddDogState) {
 //                    )
 //                }
                     Spacer(modifier = Modifier.padding(8.dp))
-                    IsOwnerField()
+                    IsOwnerField(
+                        value = dogFormState.isOwner,
+                        selected = { viewModel.onIsOwnerChanged(it) }
+                    )
                     Spacer(modifier = Modifier.padding(8.dp))
-                    BirthdateField()
+                    BirthdateField(
+                        value = dogFormState.birthdate,
+                        onValueChanged = { viewModel.onBirthdateChanged(it) },
+                        viewModel = viewModel
+                    )
                     Spacer(modifier = Modifier.padding(8.dp))
-                    GenderField()
+                    GenderField(
+                        value = dogFormState.gender,
+                        selected = { viewModel.onGenderChanged(it) }
+                    )
                     Spacer(modifier = Modifier.padding(8.dp))
-                    BreedField()
+                    BreedField(
+                        breedsList = dogFormState.breeds,
+                        onValueChanged = { viewModel.onBreedIdSelected(it) }
+                    )
                     Spacer(modifier = Modifier.padding(8.dp))
                     DescriptionField(
                         value = dogFormState.description,
@@ -141,6 +167,13 @@ fun AddDogScreen(navController: NavController, viewModel: AddDogState) {
                     )
                     Spacer(modifier = Modifier.padding(8.dp))
                     TagsDogField()
+                    Button(
+                        onClick = {
+                            viewModel.addDog()
+                        }
+                    )  {
+                        Text(text = "Añadir mascota")
+                    }
 
 
                 }
@@ -267,39 +300,51 @@ fun DescriptionField(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BreedField() {
+fun BreedField(breedsList: List<Breed>, onValueChanged: (Int) -> Unit) {
     // Estado para el menú desplegable
     var expanded by remember { mutableStateOf(false) }
 
     // Estado para el texto seleccionado
-    var selectedOption by remember { mutableStateOf("Selecciona una opción") }
+    var selectedOption by remember { mutableStateOf("Selecciona la raza") }
 
-    // Lista de opciones
-    val options = listOf("Opción 1", "Opción 2", "Opción 3")
+    var selectedOptionId by remember { mutableIntStateOf(0) }
 
-    Box() {
-        OutlinedTextField(
+    ExposedDropdownMenuBox(
+        expanded = expanded,
+        onExpandedChange = {
+            expanded = !expanded
+        }
+    ) {
+        TextField(
             value = selectedOption,
+//            onValueChange = { selectedOption = it },
+//            onValueChange = onValueChanged,
             onValueChange = {},
             readOnly = true,
-            label = { Text("Opciones") },
             modifier = Modifier
-                .fillMaxWidth()
-                .clickable { expanded = true }
+                .menuAnchor()
+                .fillMaxWidth(),
+            label = { Text("Selecciona una opción") },
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+            },
+            colors = ExposedDropdownMenuDefaults.textFieldColors()
         )
-        DropdownMenu(
+        ExposedDropdownMenu(
             expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier.fillMaxWidth()
+            onDismissRequest = { expanded = false }
         ) {
-            options.forEach { option ->
+            breedsList.forEach { breed ->
                 DropdownMenuItem(
+                    text = { Text(breed.name) },
                     onClick = {
-                        selectedOption = option
+                        selectedOption = breed.name
+                        selectedOptionId = breed.id
+                        onValueChanged(selectedOptionId)
                         expanded = false
-                    },
-                    text = { Text(option) }
+                    }
                 )
             }
         }
@@ -307,8 +352,12 @@ fun BreedField() {
 }
 
 @Composable
-fun GenderField() {
-    var selectedOption by remember { mutableStateOf("Sí") }
+fun GenderField(
+    value: Boolean,
+    selected: (Boolean) -> Unit
+) {
+    var selectedOption by remember { mutableStateOf(true) }
+
     Text(
         text = "Género de la mascota",
         style = MaterialTheme.typography.bodyLarge
@@ -321,8 +370,8 @@ fun GenderField() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             RadioButton(
-                selected = selectedOption == "Sí",
-                onClick = { selectedOption = "Sí" }
+                selected = value,
+                onClick = { selected(true) }
             )
             Text("Macho")
         }
@@ -330,8 +379,8 @@ fun GenderField() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             RadioButton(
-                selected = selectedOption == "No",
-                onClick = { selectedOption = "No" }
+                selected = !value,
+                onClick = { selected(false) }
             )
             Text("Hembra")
         }
@@ -340,68 +389,117 @@ fun GenderField() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BirthdateField() {
+fun BirthdateField(
+    value: String,
+    onValueChanged: (String) -> Unit,
+    viewModel: AddDogState
+) {
     fun convertMillisToDate(millis: Long): String {
-        val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
         return formatter.format(Date(millis))
     }
 
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
-    val selectedDate = datePickerState.selectedDateMillis?.let {
-        convertMillisToDate(it)
-    } ?: ""
+//    val selectedDate = datePickerState.selectedDateMillis?.let {
+//        convertMillisToDate(it)
+//    } ?: ""
 
-    Text(
-        text = "Fecha de nacimiento",
-        style = MaterialTheme.typography.bodyLarge
+    TextFieldForm(
+        value = value,
+        onValueChange = onValueChanged,
+        label = "Fecha de nacimiento",
+        placeholder = "Fecha de nacimiento",
+        modifier = Modifier.clickable {
+            showDatePicker = true
+        },
+        trailingIcon = {
+            Icon(
+                imageVector = Icons.Default.DateRange,
+                contentDescription = "Fecha de nacimiento",
+                modifier = Modifier.clickable {
+                    showDatePicker = true
+                }
+            )
+        }
     )
-    Box(
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        OutlinedTextField(
-            value = selectedDate,
-            onValueChange = { },
-            label = { Text("DOB") },
-            readOnly = true,
-            trailingIcon = {
-                IconButton(onClick = { showDatePicker = !showDatePicker }) {
-                    Icon(
-                        imageVector = Icons.Default.DateRange,
-                        contentDescription = "Select date"
-                    )
+    if (showDatePicker) {
+        DatePickerDialog(
+            onDismissRequest = { showDatePicker = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    if (datePickerState.selectedDateMillis != null) {
+                        val date = convertMillisToDate(datePickerState.selectedDateMillis!!)
+                        viewModel.onBirthdateChanged(date)
+                    }
+                    showDatePicker = false
+                }) {
+                    Text("OK")
                 }
             },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(64.dp)
-        )
-        if (showDatePicker) {
-            Popup(
-                onDismissRequest = { showDatePicker = false },
-                alignment = Alignment.TopStart
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .offset(y = 64.dp)
-                        .shadow(elevation = 4.dp)
-                        .background(MaterialTheme.colorScheme.surface)
-                        .padding(16.dp)
-                ) {
-                    DatePicker(
-                        state = datePickerState,
-                        showModeToggle = false
-                    )
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text("Cancel")
                 }
             }
+        ) {
+            DatePicker(state = datePickerState)
         }
     }
+
+//    Text(
+//        text = "Fecha de nacimiento",
+//        style = MaterialTheme.typography.bodyLarge
+//    )
+//    Box(
+//        modifier = Modifier.fillMaxWidth()
+//    ) {
+//        OutlinedTextField(
+//            value = selectedDate,
+//            onValueChange = { },
+//            label = { Text("DOB") },
+//            readOnly = true,
+//            trailingIcon = {
+//                IconButton(onClick = { showDatePicker = !showDatePicker }) {
+//                    Icon(
+//                        imageVector = Icons.Default.DateRange,
+//                        contentDescription = "Select date"
+//                    )
+//                }
+//            },
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .height(64.dp)
+//        )
+//        if (showDatePicker) {
+//            Popup(
+//                onDismissRequest = { showDatePicker = false },
+//                alignment = Alignment.TopStart
+//            ) {
+//                Box(
+//                    modifier = Modifier
+//                        .fillMaxWidth()
+//                        .offset(y = 64.dp)
+//                        .shadow(elevation = 4.dp)
+//                        .background(MaterialTheme.colorScheme.surface)
+//                        .padding(16.dp)
+//                ) {
+//                    DatePicker(
+//                        state = datePickerState,
+//                        showModeToggle = false
+//                    )
+//                }
+//            }
+//        }
+//    }
 }
 
 @Composable
-fun IsOwnerField() {
-    var selectedOption by remember { mutableStateOf("Sí") }
+fun IsOwnerField(
+    value: Boolean,
+    selected: (Boolean) -> Unit
+) {
+
     Text(
         text = "¿Es dueño de la mascota?",
         style = MaterialTheme.typography.bodyLarge
@@ -414,8 +512,8 @@ fun IsOwnerField() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             RadioButton(
-                selected = selectedOption == "Sí",
-                onClick = { selectedOption = "Sí" }
+                selected = value,
+                onClick = { selected(true) }
             )
             Text("Sí")
         }
@@ -423,8 +521,8 @@ fun IsOwnerField() {
             verticalAlignment = Alignment.CenterVertically
         ) {
             RadioButton(
-                selected = selectedOption == "No",
-                onClick = { selectedOption = "No" }
+                selected = !value,
+                onClick = { selected(false) }
             )
             Text("No")
         }

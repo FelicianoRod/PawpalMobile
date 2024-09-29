@@ -1,11 +1,15 @@
 package com.example.dogprofile.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.dogprofile.application.DogRegistrar
 import com.example.dogprofile.ui.models.DogFormStateModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class AddDogState() : ViewModel() {
 
@@ -29,9 +33,14 @@ class AddDogState() : ViewModel() {
         _dogFormState.value = currentState.copy(birthdate = birthdate)
     }
 
-    fun onGenderChanged(gender: String) {
+    fun onGenderChanged(gender: Boolean) {
         val currentState = _dogFormState.value
         _dogFormState.value = currentState.copy(gender = gender)
+    }
+
+    fun onBreedIdSelected(breedId: Int) {
+        val currentState = _dogFormState.value
+        _dogFormState.value = currentState.copy(breedId = breedId)
     }
 
     fun onDescriptionChanged(description: String) {
@@ -52,6 +61,40 @@ class AddDogState() : ViewModel() {
     fun onImageUrlChanged(imageUrl: String) {
         val currentState = _dogFormState.value
         _dogFormState.value = currentState.copy(imageUrl = imageUrl)
+    }
+
+    fun getBreedsList() {
+        viewModelScope.launch {
+            val breeds = dogRegistrar.getBreeds()
+            println(breeds?.size)
+            if (breeds != null) {
+                _dogFormState.value = _dogFormState.value.copy(breeds = breeds)
+            }
+        }
+    }
+
+//    fun addDogOnClick() {
+//        addDog()
+//    }
+
+    fun addDog() {
+        val currentState = _dogFormState.value
+
+        viewModelScope.launch {
+            withContext(Dispatchers.Main) {
+                dogRegistrar.registerDog(
+                    name = currentState.name,
+                    isOwner = currentState.isOwner,
+                    birthdate = currentState.birthdate,
+                    gender = currentState.gender,
+                    breedId = currentState.breedId,
+                    description = currentState.description,
+                    weight = currentState.weight,
+                    tags = currentState.tags,
+                    imageUrl = currentState.imageUrl
+                )
+            }
+        }
     }
 
 

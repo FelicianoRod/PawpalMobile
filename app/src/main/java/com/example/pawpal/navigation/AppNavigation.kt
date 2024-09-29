@@ -74,6 +74,7 @@ fun AppNavigation() {
 
         composable(route = AppScreens.AddDogScreen.route) {
             val addDogState = AddDogState()
+            addDogState.getBreedsList()
             AddDogScreen(navController = navController, viewModel = addDogState)
         }
 
