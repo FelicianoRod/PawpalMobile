@@ -1,6 +1,10 @@
 package com.example.pawpal.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.navigation.NavType.Companion.StringType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -13,6 +17,7 @@ import com.example.authentication.ui.viewmodel.SignUpViewModel
 import com.example.dogprofile.ui.view.AddDogScreen
 import com.example.dogprofile.ui.view.DogProfileScreen
 import com.example.dogprofile.ui.viewmodel.AddDogState
+import com.example.dogprofile.ui.viewmodel.DogStateViewModel
 import com.example.home.ui.view.HomeScreen
 import com.example.pawpal.screens.FirstScreen
 import com.example.pawpal.screens.SecondScreen
@@ -69,6 +74,9 @@ fun AppNavigation() {
 
         // DogProfile
         composable(route = AppScreens.DogProfileScreen.route) {
+//            val dogStateViewModel = DogStateViewModel()
+//                dogStateViewModel.getDogsUserList()
+//            DogProfileScreen(navController, dogStateViewModel)
             DogProfileScreen(navController)
         }
 

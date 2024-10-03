@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,7 +24,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -39,12 +37,16 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -55,12 +57,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Popup
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.core.ui.components.DrawerContent
@@ -89,6 +89,24 @@ fun AddDogScreen(navController: NavController, viewModel: AddDogState) {
 
     val scrollState = rememberScrollState()
 
+    val snackbarHostState = remember { SnackbarHostState() }
+
+//    val insertSuccess by viewModel.message.collectAsState()
+
+    val showMessage by viewModel.showMessage.collectAsState()
+    val message by viewModel.message.collectAsState()
+
+    LaunchedEffect(showMessage) {
+        if (showMessage) {
+            snackbarHostState.showSnackbar(
+                message = message,
+                duration = SnackbarDuration.Short
+            )
+//            viewModel._noti.value = false
+
+        }
+    }
+
     PawpalTheme {
         ModalNavigationDrawer(
             drawerState = drawerState,
@@ -99,7 +117,8 @@ fun AddDogScreen(navController: NavController, viewModel: AddDogState) {
             },
         ) {
             Scaffold(
-                topBar = { TopAppBarSecondary("Añadir mascota", navController) }
+                topBar = { TopAppBarSecondary("Añadir mascota", navController) },
+                snackbarHost = { SnackbarHost(snackbarHostState) }
             ) { innerPadding ->
                 Column(
                     modifier = Modifier
@@ -118,6 +137,8 @@ fun AddDogScreen(navController: NavController, viewModel: AddDogState) {
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.Gray
                     )
+
+
                     Spacer(modifier = Modifier.padding(8.dp))
                     NameDogField(
                         value = dogFormState.name,
@@ -174,6 +195,16 @@ fun AddDogScreen(navController: NavController, viewModel: AddDogState) {
                     )  {
                         Text(text = "Añadir mascota")
                     }
+//                    Box(
+//                        modifier = Modifier.fillMaxSize(),
+//                    ) {
+//                        SnackbarHost(
+//                            hostState = snackbarHostState,
+////                            modifier = Modifier.align(Alignment.BottomCenter)
+////                                .padding(16.dp)
+////                                .zIndex(1f)
+//                            )
+//                    }
 
 
                 }

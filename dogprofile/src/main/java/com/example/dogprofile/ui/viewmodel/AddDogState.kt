@@ -18,6 +18,13 @@ class AddDogState() : ViewModel() {
     private val _dogFormState = MutableStateFlow(DogFormStateModel())
     val dogFormState: StateFlow<DogFormStateModel> = _dogFormState.asStateFlow()
 
+    private val _showMessage = MutableStateFlow(false)
+    val showMessage: StateFlow<Boolean> = _showMessage.asStateFlow()
+
+    private val _message = MutableStateFlow("")
+    val message: StateFlow<String> = _message.asStateFlow()
+
+
     fun onNameChanged(name: String) {
         val currentState = _dogFormState.value
         _dogFormState.value = currentState.copy(name = name)
@@ -82,7 +89,7 @@ class AddDogState() : ViewModel() {
 
         viewModelScope.launch {
             withContext(Dispatchers.Main) {
-                dogRegistrar.registerDog(
+                val result = dogRegistrar.registerDog(
                     name = currentState.name,
                     isOwner = currentState.isOwner,
                     birthdate = currentState.birthdate,
@@ -93,6 +100,14 @@ class AddDogState() : ViewModel() {
                     tags = currentState.tags,
                     imageUrl = currentState.imageUrl
                 )
+                if (result) {
+                    _message.value = "Mascota registrada exitosamente."
+                } else {
+                    _message.value = "Error al agregar la mascota."
+                }
+                _showMessage.value = true
+
+
             }
         }
     }

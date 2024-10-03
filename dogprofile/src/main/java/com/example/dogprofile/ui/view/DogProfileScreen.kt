@@ -1,19 +1,32 @@
 package com.example.dogprofile.ui.view
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -26,13 +39,20 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberImagePainter
 import com.example.core.ui.components.DrawerContent
 import com.example.core.ui.theme.PawpalTheme
 //import com.example.core.ui.theme.PawpalTheme
@@ -41,20 +61,33 @@ import com.example.core.ui.theme.PawpalTheme
 //import com.example.dogprofile.ui.theme.PawpalTheme
 //import com.example.dogprofile.ui.theme.PawpalTheme
 import com.example.core.ui.components.TopAppBarPrimary
+import com.example.dogprofile.domain.Dog
+import com.example.dogprofile.ui.viewmodel.DogStateViewModel
 
 
 @Preview(showBackground = true)
 @Composable
 fun DogProfileScreenPreview() {
-    DogProfileScreen(navController = rememberNavController())
+//    DogProfileScreen(navController = rememberNavController(), viewModel = DogStateViewModel())
 }
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
+//fun DogProfileScreen(navController: NavController, viewModel: DogStateViewModel) {
 fun DogProfileScreen(navController: NavController) {
+
+    val viewModel: DogStateViewModel = DogStateViewModel()
+
+    val isLoading by viewModel.isLoading.collectAsState()
+
+    val dogList by viewModel.dogList.collectAsState()
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+
+//    LaunchedEffect(Unit) {
+    viewModel.getDogsUserList()
+//    }
 
     PawpalTheme {
         ModalNavigationDrawer(
@@ -66,10 +99,11 @@ fun DogProfileScreen(navController: NavController) {
             },
         ) {
             Scaffold(
-            topBar = { TopAppBarPrimary("Perrito", drawerState, scope) }
+                topBar = { TopAppBarPrimary("Perrito", drawerState, scope) }
             ) { innerPadding ->
                 Column(
-                    modifier = Modifier.padding(innerPadding)
+                    modifier = Modifier
+                        .padding(innerPadding)
                         .fillMaxSize()
                         .padding(16.dp),
                 ) {
@@ -134,8 +168,79 @@ fun DogProfileScreen(navController: NavController) {
                         )
 
                     )
+                    Spacer(modifier = Modifier.padding(8.dp))
+                    if (isLoading) {
+                        Column(
+                            modifier = Modifier.fillMaxSize(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+
+
+                        ) {
+                            CircularProgressIndicator(
+//                                modifier = Modifier.width(64.dp),
+                                color = MaterialTheme.colorScheme.primary
+                            )
+
+                        }
+                    } else {
+
+                        if (dogList.isEmpty()) {
+                            Text(text = "No hay mascotas")
+                        } else {
+
+//                            LazyColumn {
+//                                items(dogList) { dog ->
+//                                    DogItem(dog)
+//                                    Spacer(modifier = Modifier.padding(8.dp))
+//                                }
+//                            }
+                            LazyVerticalGrid(
+                                columns = GridCells.Fixed(2),
+//                                contentPadding = PaddingValues(8.dp),
+                                modifier = Modifier
+//                                    .padding(innerPadding)
+                                    .fillMaxSize()
+                            ) {
+                                items(dogList) { dog ->
+                                    DogItem(dog)
+                                }
+                            }
+
+                        }
+
+                    }
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun DogItem(dog: Dog) {
+    Card(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(8.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Image(
+                painter = rememberImagePainter(
+                    data = "https://static.fundacion-affinity.org/cdn/farfuture/PVbbIC-0M9y4fPbbCsdvAD8bcjjtbFc0NSP3lRwlWcE/mtime:1643275542/sites/default/files/los-10-sonidos-principales-del-perro.jpg"
+                ),
+                contentDescription = null,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+                    .height(120.dp)
+                    .clip(RoundedCornerShape(8.dp))
+            )
+            Spacer(modifier = Modifier.padding(8.dp))
+            Text(text = dog.name ?: "No name")
+//            Text(text = dog.owner_name ?: "No owner")
         }
     }
 }

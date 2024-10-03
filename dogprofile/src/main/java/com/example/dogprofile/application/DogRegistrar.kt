@@ -24,7 +24,7 @@ class DogRegistrar : ViewModel() {
         }
     }
 
-    fun registerDog(
+    suspend fun registerDog(
         name: String,
         isOwner: Boolean,
         birthdate: String,
@@ -34,11 +34,11 @@ class DogRegistrar : ViewModel() {
         weight: Double,
         tags: List<String>,
         imageUrl: String
-    ) {
+    ) : Boolean {
 
         val session = supabase.auth.currentSessionOrNull()
 
-        viewModelScope.launch {
+//        viewModelScope.launch {
             val dog = withContext(Dispatchers.IO) {
                 val ownerName = if (isOwner) {
                     profileViewModel.getProfile()?.full_name
@@ -69,7 +69,8 @@ class DogRegistrar : ViewModel() {
                 )
             }
             val result = dogRepository.addDog(dog)
-        }
+        return result
+//        }
 
 
 //        val dog = Dog(

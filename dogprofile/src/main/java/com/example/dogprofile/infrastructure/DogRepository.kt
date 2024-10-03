@@ -31,6 +31,7 @@ class DogRepository : ViewModel() {
     suspend fun getDogsUser(): List<Dog>? {
 
         val session = supabase.auth.currentSessionOrNull()
+        Log.d("DogRepository", "Dogs fetched successfully")
 
         return try {
             supabase.from("pets")
