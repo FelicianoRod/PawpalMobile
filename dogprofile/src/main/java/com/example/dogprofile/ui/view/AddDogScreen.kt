@@ -2,6 +2,7 @@ package com.example.dogprofile.ui.view
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -56,6 +57,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
@@ -188,12 +190,24 @@ fun AddDogScreen(navController: NavController, viewModel: AddDogState) {
                     )
                     Spacer(modifier = Modifier.padding(8.dp))
                     TagsDogField()
-                    Button(
-                        onClick = {
-                            viewModel.addDog()
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(0.dp, 16.dp, 0.dp, 16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Button(
+                            modifier = Modifier.width(180.dp).height(48.dp),
+                            onClick = {
+                                viewModel.addDog()
+                            }
+                        )  {
+                            Text(
+                                text = "Añadir mascota",
+                                style = MaterialTheme.typography.bodyMedium
+                            )
                         }
-                    )  {
-                        Text(text = "Añadir mascota")
+
                     }
 //                    Box(
 //                        modifier = Modifier.fillMaxSize(),
@@ -220,7 +234,36 @@ fun TagsDogField() {
     val tags = remember { mutableStateListOf<String>() }
 
     Column(modifier = Modifier.fillMaxWidth()) {
-        OutlinedTextField(
+//        OutlinedTextField(
+//            value = text,
+//            onValueChange = { value ->
+//                if (value.endsWith(",")) {
+//                    val tag = value.trimEnd(',').trim()
+//                    if (tag.isNotEmpty() && tags.size < 3) {
+//                        tags.add(tag)
+//                    }
+//                    text = "" // Limpiar el campo para el siguiente tag
+//                } else {
+//                    text = value
+//                }
+//            },
+//            label = { Text("Ingresa hasta 3 tags") },
+//            placeholder = { Text("Escribe y separa con coma") },
+//            modifier = Modifier.fillMaxWidth(),
+//            trailingIcon = {
+//                if (text.isNotEmpty()) {
+//                    IconButton(onClick = { text = "" }) {
+//                        Icon(
+//                            imageVector = Icons.Default.Close,
+//                            contentDescription = "Limpiar texto"
+//                        )
+//                    }
+//                }
+//            },
+//            singleLine = true,
+//            maxLines = 1
+//        )
+        TextFieldForm(
             value = text,
             onValueChange = { value ->
                 if (value.endsWith(",")) {
@@ -233,8 +276,8 @@ fun TagsDogField() {
                     text = value
                 }
             },
-            label = { Text("Ingresa hasta 3 tags") },
-            placeholder = { Text("Escribe y separa con coma") },
+            label = "Ingresa hasta 3 tags",
+            placeholder = "Escribe y separa con coma",
             modifier = Modifier.fillMaxWidth(),
             trailingIcon = {
                 if (text.isNotEmpty()) {
@@ -348,20 +391,22 @@ fun BreedField(breedsList: List<Breed>, onValueChanged: (Int) -> Unit) {
             expanded = !expanded
         }
     ) {
-        TextField(
+        TextFieldForm(
             value = selectedOption,
+            placeholder = "Selecciona la raza",
+            modifier = Modifier.menuAnchor(),
 //            onValueChange = { selectedOption = it },
 //            onValueChange = onValueChanged,
             onValueChange = {},
             readOnly = true,
-            modifier = Modifier
-                .menuAnchor()
-                .fillMaxWidth(),
-            label = { Text("Selecciona una opción") },
+//            modifier = Modifier
+//                .menuAnchor()
+//                .fillMaxWidth(),
+            label = "Selecciona una opción",
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
             },
-            colors = ExposedDropdownMenuDefaults.textFieldColors()
+//            colors = ExposedDropdownMenuDefaults.textFieldColors()
         )
         ExposedDropdownMenu(
             expanded = expanded,

@@ -25,6 +25,10 @@ fun TextFieldForm(
     supportingText: String = "",
     errorList: List<String> = listOf(),
     isError: Boolean = false,
+    readOnly: Boolean = false,
+    singleLine: Boolean = true,
+    maxLines: Int = 1,
+    minLines: Int = 1,
 //    keyboardOptions: KeyboardOptions,
     keyboardType: KeyboardType = KeyboardType.Text,
     trailingIcon: @Composable (() -> Unit)? = null,
@@ -60,9 +64,9 @@ fun TextFieldForm(
         suffix = null,
         isError = isError,
 //        visualTransformation
-        singleLine = true,
-        maxLines = 1,
-        minLines = 1,
+        singleLine = singleLine,
+        maxLines = maxLines,
+        minLines = minLines,
 //        shape =
         colors = TextFieldDefaults.textFieldColors(
             containerColor = MaterialTheme.colorScheme.surface,
@@ -73,7 +77,7 @@ fun TextFieldForm(
 
 //        fun
         onValueChange = onValueChange,
-        readOnly = false,
+        readOnly = readOnly,
         keyboardOptions = KeyboardOptions(
             keyboardType = keyboardType,
             imeAction = ImeAction.Next

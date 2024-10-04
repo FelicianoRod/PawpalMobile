@@ -26,6 +26,9 @@ class LoginViewModel : ViewModel() {
     private val _buttonEnabled = MutableStateFlow(false)
     val buttonEnabled: StateFlow<Boolean> = _buttonEnabled
 
+    private val _message = MutableStateFlow("")
+    val message: StateFlow<String> = _message.asStateFlow()
+
     fun onLoginChanged(email: String, password: String) {
         _email.value = email
         _password.value = password
@@ -44,7 +47,12 @@ class LoginViewModel : ViewModel() {
     private fun signInWithEmailUi(email: String, password: String, navController: NavController) {
         try {
             viewModelScope.launch {
-                signInWithEmailDomain(email = email, password = password, navController = navController)
+                val message = signInWithEmailDomain(email = email, password = password, navController = navController)
+                when (message) {
+                    "Success" -> navController.navigate("home")
+                    "Invalid login credentials" -> _message.value = "Credenciales inválidas"
+                    else -> _message.value = "Error, comprueba tu conexión"
+                }
             }
         } catch (e: Exception) {
             Log.e("SignInWithEmailUi", "Error during sign in - view", e)

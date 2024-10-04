@@ -129,7 +129,7 @@ fun DogProfileScreen(navController: NavController) {
                             )
                         ) {
                             Text(
-                                text = "2 Mascotas",
+                                text = dogList.size.toString() + " mascotas",
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }

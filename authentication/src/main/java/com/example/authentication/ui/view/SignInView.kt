@@ -36,6 +36,7 @@ fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
     val password by viewModel.password.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val buttonEnabled by viewModel.buttonEnabled.collectAsState()
+    val message by viewModel.message.collectAsState()
 
     PawpalTheme {
         Box(
@@ -54,6 +55,13 @@ fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     HeaderImage(Modifier.align(Alignment.CenterHorizontally))
+                    Spacer(modifier = Modifier.padding(16.dp))
+
+                    Text(
+                        text = message,
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = Color.Red
+                    )
                     Spacer(modifier = Modifier.padding(16.dp))
 
                     EmailField(email) { viewModel.onLoginChanged(it, password) }
