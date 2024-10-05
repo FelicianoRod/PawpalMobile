@@ -47,7 +47,10 @@ class LoginViewModel : ViewModel() {
     private fun signInWithEmailUi(email: String, password: String, navController: NavController) {
         try {
             viewModelScope.launch {
+                _isLoading.value = true
                 val message = signInWithEmailDomain(email = email, password = password, navController = navController)
+                _isLoading.value = false
+
                 when (message) {
                     "Success" -> navController.navigate("home")
                     "Invalid login credentials" -> _message.value = "Credenciales inválidas"

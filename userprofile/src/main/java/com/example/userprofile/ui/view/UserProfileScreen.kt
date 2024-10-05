@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -64,9 +65,12 @@ fun UserProfileScreenPreview() {
 @Composable
 fun UserProfileScreen(navController: NavController, viewModel: UserProfileStateViewModel) {
 
+//    val userProfileViewModel: UserProfileStateViewModel by viewModels()
+
     val name by viewModel.name.collectAsState()
     val biography by viewModel.biography.collectAsState()
     val avatarUrl by viewModel.avatarUrl.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
 
     val options = listOf(
         SettingsOptionUserProfile(
@@ -77,18 +81,18 @@ fun UserProfileScreen(navController: NavController, viewModel: UserProfileStateV
         SettingsOptionUserProfile(
             icon = R.drawable.appareance,
             text = "Apariencia",
-            route = ({ navController.navigate("profile_screen") }),
+            route = ({ navController.navigate("appearance_screen") }),
         ),
         SettingsOptionUserProfile(
             icon = R.drawable.profile,
             text = "Notificaciones",
-            route = ({ navController.navigate("profile_screen") }),
+            route = ({ navController.navigate("notification_settings_screen") }),
         ),
-        SettingsOptionUserProfile(
-            icon = R.drawable.profile,
-            text = "Visualización",
-            route = ({ navController.navigate("profile_screen") }),
-        )
+//        SettingsOptionUserProfile(
+//            icon = R.drawable.profile,
+//            text = "Visualización",
+//            route = ({ navController.navigate("profile_screen") }),
+//        )
     )
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -106,59 +110,65 @@ fun UserProfileScreen(navController: NavController, viewModel: UserProfileStateV
             Scaffold(
                 topBar = { TopAppBarPrimary("Cuenta", drawerState, scope) }
             ) { innerPadding ->
-                Column(
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(120.dp)
-                            .clip(CircleShape)
-                            .background(MaterialTheme.colorScheme.primary)
-                    ) {
-                        Image(
-                            painter = rememberImagePainter(
-                                data = avatarUrl
-                            ),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize()
-                        )
+                if (isLoading) {
+                    Box(Modifier.fillMaxSize()) {
+                        CircularProgressIndicator(Modifier.align(Alignment.Center))
                     }
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        text = name,
-                        style = MaterialTheme.typography.headlineMedium,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.Black
-                    )
-                    Text(
-                        text = biography,
-                        style = MaterialTheme.typography.headlineMedium,
-                        color = Color.Gray,
-                        textAlign = TextAlign.Center
-
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        ActionButton("Caninos")
-                        ActionButton("Notific.")
-                        ActionButton("Otros.")
-                    }
-                    Spacer(modifier = Modifier.height(24.dp))
-                    LazyColumn(
+                } else {
+                    Column(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp),
+                            .padding(innerPadding)
+                            .fillMaxSize()
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(120.dp)
+                                .clip(CircleShape)
+                                .background(MaterialTheme.colorScheme.primary)
                         ) {
-                        items(options) { option ->
-                            SettingOptionItem(option = option)
+                            Image(
+                                painter = rememberImagePainter(
+                                    data = avatarUrl
+                                ),
+                                contentDescription = null,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            text = name,
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black
+                        )
+                        Text(
+                            text = biography,
+                            style = MaterialTheme.typography.headlineMedium,
+                            color = Color.Gray,
+                            textAlign = TextAlign.Center
+
+                        )
+//                        Spacer(modifier = Modifier.height(16.dp))
+//                        Row(
+//                            horizontalArrangement = Arrangement.SpaceEvenly,
+//                            modifier = Modifier.fillMaxWidth()
+//                        ) {
+//                            ActionButton("Caninos")
+//                            ActionButton("Notific.")
+//                            ActionButton("Otros.")
+//                        }
+                        Spacer(modifier = Modifier.height(24.dp))
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(8.dp),
+                        ) {
+                            items(options) { option ->
+                                SettingOptionItem(option = option)
+                            }
                         }
                     }
                 }

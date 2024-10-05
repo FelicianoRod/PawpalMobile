@@ -4,43 +4,40 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.navigation.compose.rememberNavController
+import com.example.core.ui.theme.PawpalTheme
 import com.example.pawpal.navigation.AppNavigation
-import com.example.pawpal.screens.FirstScreen
-import com.example.pawpal.ui.theme.PawpalTheme
-import com.example.pawpal.ui.view.SplashScreen
+import com.example.userprofile.ui.viewmodel.ThemeMode
+import com.example.userprofile.ui.viewmodel.ThemeStateViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        val themeStateViewModel: ThemeStateViewModel by viewModels()
         setContent {
-            PawpalTheme {
-//                SplashScreen(navController = rememberNavController())
-//                Surface(color = MaterialTheme.colorScheme.background) {
-                    AppNavigation()
-//                }
-//                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-//                    FirstScreen()
-//                }
+//            val themeStateViewMode = ThemeStateViewModel()
+            val themeModeState by themeStateViewModel.themeMode.observeAsState()
+            PawpalTheme(
+                darkTheme = themeModeState == ThemeMode.Dark,
+//                darkTheme = true,
+                dynamicColor = themeModeState == ThemeMode.Dynamic,
+                followSystemTheme = themeModeState == ThemeMode.System,
+            ) {
+                AppNavigation(themeStateViewModel)
             }
         }
     }
-} // Test
+}
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     PawpalTheme {
-        AppNavigation()
+        AppNavigation(ThemeStateViewModel())
     }
 }

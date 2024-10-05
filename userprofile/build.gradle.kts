@@ -76,6 +76,7 @@ dependencies {
     implementation(libs.io.github.jan.tennert.supabase.realtime.kt)
     implementation(libs.org.jetbrains.kotlinx.serialization.json)
     implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.runtime.livedata)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

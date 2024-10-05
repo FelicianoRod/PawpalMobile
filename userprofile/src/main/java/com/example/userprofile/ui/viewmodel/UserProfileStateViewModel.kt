@@ -21,10 +21,14 @@ class UserProfileStateViewModel : ViewModel() {
     private val _avatarUrl = MutableStateFlow("")
     val avatarUrl: StateFlow<String> = _avatarUrl.asStateFlow()
 
+    private val _isLoading = MutableStateFlow(false)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
     fun getUserProfileState() {
         viewModelScope.launch {
+            _isLoading.value = true
+
             val user = profileViewModel.getProfile()
-            println(user?.full_name)
 
             if (user != null) {
                 _name.value = user.full_name ?: "..."
@@ -33,6 +37,7 @@ class UserProfileStateViewModel : ViewModel() {
             } else {
                 val message = "No se pudo obtener tu información de perfil.";
             }
+            _isLoading.value = false
         }
     }
 }

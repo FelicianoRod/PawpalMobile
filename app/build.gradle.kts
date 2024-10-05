@@ -50,6 +50,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":core"))
+
 //    Mis módulos
     implementation(project(":home"))
     implementation(project(":authentication"))
@@ -68,6 +70,8 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(project(":authentication"))
+    implementation(libs.androidx.runtime.livedata)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
