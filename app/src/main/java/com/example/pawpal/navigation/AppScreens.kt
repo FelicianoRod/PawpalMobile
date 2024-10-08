@@ -19,5 +19,6 @@ sealed class AppScreens(val route: String) {
 //  Dog profile
     object DogProfileScreen: AppScreens("dog_profile")
     object AddDogScreen: AppScreens("add_dog")
+    object DogInformationScreen: AppScreens("dog_information")
 
 }

@@ -16,9 +16,14 @@ import com.example.authentication.ui.view.SignUpScreen
 import com.example.authentication.ui.viewmodel.LoginViewModel
 import com.example.authentication.ui.viewmodel.SignUpViewModel
 import com.example.core.ui.theme.PawpalTheme
+import com.example.dogprofile.data.supabase.DogRepositoryImpl
+import com.example.dogprofile.domain.repository.DogInformationViewModelFactory
+import com.example.dogprofile.domain.repository.DogRepository
 import com.example.dogprofile.ui.view.AddDogScreen
+import com.example.dogprofile.ui.view.DogInformationScreen
 import com.example.dogprofile.ui.view.DogProfileScreen
 import com.example.dogprofile.ui.viewmodel.AddDogState
+import com.example.dogprofile.ui.viewmodel.DogInformationViewModel
 import com.example.dogprofile.ui.viewmodel.DogStateViewModel
 import com.example.home.ui.view.HomeScreen
 import com.example.pawpal.screens.FirstScreen
@@ -107,7 +112,15 @@ fun AppNavigation(themeStateViewModel: ThemeStateViewModel) {
                 AddDogScreen(navController = navController, viewModel = addDogState)
             }
 
+            composable(route = AppScreens.DogInformationScreen.route) {
 
+                val dogInformationViewModel: DogInformationViewModel = viewModel(
+                    factory = DogInformationViewModelFactory(DogRepositoryImpl())
+                )
+
+                dogInformationViewModel.getDogInformation()
+                DogInformationScreen(navController, dogInformationViewModel)
+            }
         }
 //    }
 }

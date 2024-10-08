@@ -1,6 +1,7 @@
 package com.example.dogprofile.ui.view
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -203,7 +204,7 @@ fun DogProfileScreen(navController: NavController) {
                                     .fillMaxSize()
                             ) {
                                 items(dogList) { dog ->
-                                    DogItem(dog)
+                                    DogItem(dog, navController)
                                 }
                             }
 
@@ -217,11 +218,14 @@ fun DogProfileScreen(navController: NavController) {
 }
 
 @Composable
-fun DogItem(dog: Dog) {
+fun DogItem(dog: Dog, navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxSize()
             .padding(8.dp)
+            .clickable(onClick = {
+                navController.navigate("dog_information")
+            })
     ) {
         Column(
             modifier = Modifier.fillMaxSize().padding(8.dp),
