@@ -24,6 +24,7 @@ class DogInformationViewModel(
             dogRepository.getDogInformation(100)
                 .collect { dogInformation ->
                     _dogInformation.value = dogInformation
+                    println("Aquí---------")
                     println(dogInformation)
                 }
         }

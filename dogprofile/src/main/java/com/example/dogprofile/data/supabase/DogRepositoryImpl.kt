@@ -18,22 +18,26 @@ class DogRepositoryImpl : DogRepository {
             val columns = Columns.raw("""
                 image_url,
                 name,
+                birthdate,
+                description,
                 breeds (
                     id,
                     name
                 ),
-                birthdate,
                 profiles (
                     id,
                     full_name,
                     city
-                ),
-                description
+                )
             """.trimIndent())
             val dogInformation = supabase.from("pets")
-                .select(
-                    columns = columns
-                ).decodeSingle<DogInformation>()
+                .select(columns = columns) {
+                    filter {
+                        eq("id", id)
+                    }
+                }
+                .decodeSingle<DogInformation>()
+            emit(dogInformation)
 //            supabase.from("pets")
 //                .select() {
 //                    filter {

@@ -10,6 +10,8 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -20,6 +22,8 @@ import com.example.dogprofile.ui.viewmodel.DogInformationViewModel
 
 @Composable
 fun DogInformationScreen(navController: NavController, viewModel: DogInformationViewModel) {
+
+    val dogInformation by viewModel.dogInformation.collectAsState()
 
     Scaffold(
         topBar = { TopAppBarSecondary("mascota", navController) },
@@ -34,6 +38,11 @@ fun DogInformationScreen(navController: NavController, viewModel: DogInformation
         ) {
             AsyncImage(
                 model = "https://www.maestrosdelweb.com/images/2009/08/crayones_jpg.jpg",
+                contentDescription = "Imagen de ejemplo"
+
+            )
+            AsyncImage(
+                model = dogInformation?.image_url,
                 contentDescription = "Imagen de ejemplo"
 
             )
