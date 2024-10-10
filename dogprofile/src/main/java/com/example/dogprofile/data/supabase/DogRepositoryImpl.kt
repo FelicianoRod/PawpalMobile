@@ -2,9 +2,11 @@ package com.example.dogprofile.data.supabase
 
 import android.util.Log
 import com.example.core.data.supabase
+import com.example.dogprofile.domain.Breed
 import com.example.dogprofile.domain.Dog
 import com.example.dogprofile.domain.models.DogInformation
 import com.example.dogprofile.domain.repository.DogRepository
+import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
 import kotlinx.coroutines.flow.Flow
@@ -47,6 +49,34 @@ class DogRepositoryImpl : DogRepository {
 
         } catch (e: Exception) {
             Log.d("DogRepositoryImpl", "getDogInformation: $e")
+            null
+        }
+    }
+
+    override suspend fun getBreeds(): Flow<List<Breed>> = flow {
+        try {
+            val breeds = supabase.from("breeds").select(
+                columns = Columns.list("id", "name")
+            ).decodeList<Breed>()
+            emit(breeds)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    override suspend fun getDogsUser(): Flow<List<Dog>?> = flow {
+
+        val session = supabase.auth.currentSessionOrNull()
+
+        try {
+            val dogs = supabase.from("pets")
+                .select() {
+                    filter {
+                        eq("profile_id", session?.user?.id ?: "")
+                    }
+                }.decodeList<Dog>()
+            emit(dogs)
+        } catch (e: Exception) {
             null
         }
     }

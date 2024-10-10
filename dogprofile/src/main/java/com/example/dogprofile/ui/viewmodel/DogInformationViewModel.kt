@@ -19,9 +19,9 @@ class DogInformationViewModel(
 //        getDogInformation()
 //    }
 
-    fun getDogInformation() {
+    fun getDogInformation(dogId: Int) {
         viewModelScope.launch {
-            dogRepository.getDogInformation(100)
+            dogRepository.getDogInformation(dogId)
                 .collect { dogInformation ->
                     _dogInformation.value = dogInformation
                     println("Aquí---------")

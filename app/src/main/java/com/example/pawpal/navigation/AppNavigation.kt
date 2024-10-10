@@ -1,11 +1,8 @@
 package com.example.pawpal.navigation
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
 import androidx.navigation.NavType.Companion.StringType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,16 +12,15 @@ import com.example.authentication.ui.view.LoginScreen
 import com.example.authentication.ui.view.SignUpScreen
 import com.example.authentication.ui.viewmodel.LoginViewModel
 import com.example.authentication.ui.viewmodel.SignUpViewModel
-import com.example.core.ui.theme.PawpalTheme
 import com.example.dogprofile.data.supabase.DogRepositoryImpl
 import com.example.dogprofile.domain.repository.DogInformationViewModelFactory
-import com.example.dogprofile.domain.repository.DogRepository
+import com.example.dogprofile.domain.repository.DogProfileViewModelFactory
 import com.example.dogprofile.ui.view.AddDogScreen
 import com.example.dogprofile.ui.view.DogInformationScreen
 import com.example.dogprofile.ui.view.DogProfileScreen
 import com.example.dogprofile.ui.viewmodel.AddDogState
 import com.example.dogprofile.ui.viewmodel.DogInformationViewModel
-import com.example.dogprofile.ui.viewmodel.DogStateViewModel
+import com.example.dogprofile.ui.viewmodel.DogProfileViewModel
 import com.example.home.ui.view.HomeScreen
 import com.example.pawpal.screens.FirstScreen
 import com.example.pawpal.screens.SecondScreen
@@ -103,7 +99,11 @@ fun AppNavigation(themeStateViewModel: ThemeStateViewModel) {
 //            val dogStateViewModel = DogStateViewModel()
 //                dogStateViewModel.getDogsUserList()
 //            DogProfileScreen(navController, dogStateViewModel)
-                DogProfileScreen(navController)
+                val dogProfileViewModel: DogProfileViewModel = viewModel(
+                    factory = DogProfileViewModelFactory(DogRepositoryImpl())
+                )
+                dogProfileViewModel.getDogsUserList()
+                DogProfileScreen(navController, dogProfileViewModel)
             }
 
             composable(route = AppScreens.AddDogScreen.route) {
@@ -112,13 +112,19 @@ fun AppNavigation(themeStateViewModel: ThemeStateViewModel) {
                 AddDogScreen(navController = navController, viewModel = addDogState)
             }
 
-            composable(route = AppScreens.DogInformationScreen.route) {
+            composable(
+                route = AppScreens.DogInformationScreen.route,
+                arguments = listOf(navArgument("dogId") { type = NavType.IntType })
+            ) { backStackEntry ->
+
+                val dogId = backStackEntry.arguments?.getInt("dogId") ?: 0
+
 
                 val dogInformationViewModel: DogInformationViewModel = viewModel(
                     factory = DogInformationViewModelFactory(DogRepositoryImpl())
                 )
 
-                dogInformationViewModel.getDogInformation()
+                dogInformationViewModel.getDogInformation(dogId)
                 DogInformationScreen(navController, dogInformationViewModel)
             }
         }
