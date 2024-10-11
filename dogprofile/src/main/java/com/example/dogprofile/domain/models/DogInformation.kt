@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class DogInformation (
-    val image_url: String? = "https://example.com/image.jpg",
+    var image_url: String? = "",
     val name: String,
     val breeds: breeds,
     val birthdate: String? = "2023-01-01",

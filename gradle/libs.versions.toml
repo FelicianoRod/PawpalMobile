@@ -59,6 +59,7 @@ io-github-jan-tennert-supabase-postgrest-kt = { group = "io.github.jan-tennert.s
 io-github-jan-tennert-supabase-gotrue-kt = { group = "io.github.jan-tennert.supabase", name = "gotrue-kt" }
 #io-github-jan-tennert-supabase-gotrue-kt = { group = "io.supabase", name = "gotrue-kt" }
 io-github-jan-tennert-supabase-realtime-kt = { group = "io.github.jan-tennert.supabase", name = "realtime-kt" }
+io-github-jan-tennert-supabase-storage-kt = { group = "io.github.jan-tennert.supabase", name = "storage-kt" }
 # Ktor
 io-ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktorClientEngineVersion"}
 # Security-State

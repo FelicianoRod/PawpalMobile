@@ -9,6 +9,7 @@ import com.example.dogprofile.domain.repository.DogRepository
 import io.github.jan.supabase.gotrue.auth
 import io.github.jan.supabase.postgrest.from
 import io.github.jan.supabase.postgrest.query.Columns
+import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
@@ -39,6 +40,14 @@ class DogRepositoryImpl : DogRepository {
                     }
                 }
                 .decodeSingle<DogInformation>()
+
+            val imageUrl = supabase.storage.from("image_upload").publicUrl(dogInformation.image_url?: "")
+            dogInformation.image_url = imageUrl
+
+//            val modifiedDogInformation = dogInformation.copy(
+//                image_url = imageUrl
+//            )
+
             emit(dogInformation)
 //            supabase.from("pets")
 //                .select() {
@@ -76,6 +85,15 @@ class DogRepositoryImpl : DogRepository {
                     }
                 }.decodeList<Dog>()
             emit(dogs)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
+    override suspend fun getImageUrl(url: String): Flow<String> = flow {
+        try {
+            val imageUrl = supabase.storage.from("image_upload").publicUrl(url)
+            emit(imageUrl)
         } catch (e: Exception) {
             null
         }

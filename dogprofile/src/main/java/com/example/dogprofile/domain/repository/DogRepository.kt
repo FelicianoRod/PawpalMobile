@@ -9,4 +9,5 @@ interface DogRepository {
     suspend fun getDogInformation(id: Int): Flow<DogInformation>
     suspend fun getBreeds(): Flow<List<Breed>>
     suspend fun getDogsUser(): Flow<List<Dog>?>
+    suspend fun getImageUrl(url: String): Flow<String?>
 }

@@ -75,6 +75,8 @@ dependencies {
     implementation(libs.io.github.jan.tennert.supabase.postgrest.kt)
     implementation(libs.io.github.jan.tennert.supabase.gotrue.kt)
     implementation(libs.io.github.jan.tennert.supabase.realtime.kt)
+    implementation(libs.io.github.jan.tennert.supabase.storage.kt)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
