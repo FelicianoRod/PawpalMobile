@@ -37,6 +37,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
+import coil.compose.SubcomposeAsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.example.core.ui.components.DrawerContent
@@ -71,40 +72,78 @@ fun DogInformationScreen(navController: NavController, viewModel: DogInformation
         ) {
             Spacer(modifier = Modifier.height(48.dp))
 
-            val painter = rememberAsyncImagePainter(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(dogInformation?.image_url)
-                    .crossfade(true)
-                    .build()
-            )
-
+//            val painter = rememberAsyncImagePainter(
+//                model = dogInformation?.image_url
+//            )
             Box(
                 modifier = Modifier
-                    .size(150.dp)
-                    .padding(16.dp),
-                contentAlignment = Alignment.Center
+                    .size(250.dp)
+                    .clip(CircleShape),
+//                    .background(Color.LightGray),
+//                    .padding(16.dp),
+                contentAlignment = Alignment.Center,
+
             ) {
-                when (painter.state) {
-                    is AsyncImagePainter.State.Loading -> {
-                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-                    }
-                    is AsyncImagePainter.State.Error -> {
+                SubcomposeAsyncImage(
+                    model = dogInformation?.image_url,
+                    contentDescription = "Dog Image",
+                    contentScale = ContentScale.Crop,
+                    loading = {
+                        CircularProgressIndicator(
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    },
+                    error = {
                         Text(
                             text = "No hay foto",
                             textAlign = TextAlign.Center,
                             modifier = Modifier.align(Alignment.Center)
                         )
-                    }
-                    else -> {
-                        Image(
-                            painter = painter,
-                            contentDescription = "Dog Image",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
-                }
+                    },
+//                    onLoading = {
+//                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+//                    },
+                    modifier = Modifier.fillMaxSize()
+                )
             }
+
+//            val painter = rememberAsyncImagePainter(
+//                model = ImageRequest.Builder(LocalContext.current)
+//                    .data(dogInformation?.image_url)
+//                    .crossfade(true)
+//                    .build()
+//            )
+
+//            Box(
+//                modifier = Modifier
+//                    .size(150.dp)
+//                    .padding(16.dp),
+//                contentAlignment = Alignment.Center
+//            ) {
+//                when (painter.state) {
+//                    is AsyncImagePainter.State.Success -> {
+//
+//                    }
+//                    is AsyncImagePainter.State.Loading -> {
+//                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+//                    }
+//                    is AsyncImagePainter.State.Error -> {
+//                        Text(
+//                            text = "No hay foto",
+//                            textAlign = TextAlign.Center,
+//                            modifier = Modifier.align(Alignment.Center)
+//                        )
+//                    }
+//                    else -> {
+//                        Image(
+//                            painter = painter,
+//                            contentDescription = "Dog Image",
+//                            contentScale = ContentScale.Crop,
+//                            modifier = Modifier.fillMaxSize()
+//                        )
+//                    }
+//                }
+//            }
 //        }
 //            Box(
 //                modifier = Modifier
