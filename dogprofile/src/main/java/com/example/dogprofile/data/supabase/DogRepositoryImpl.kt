@@ -3,7 +3,7 @@ package com.example.dogprofile.data.supabase
 import android.util.Log
 import com.example.core.data.supabase
 import com.example.dogprofile.domain.Breed
-import com.example.dogprofile.domain.Dog
+import com.example.dogprofile.domain.models.Dog
 import com.example.dogprofile.domain.models.DogInformation
 import com.example.dogprofile.domain.repository.DogRepository
 import io.github.jan.supabase.gotrue.auth
@@ -44,17 +44,7 @@ class DogRepositoryImpl : DogRepository {
             val imageUrl = supabase.storage.from("image_upload").publicUrl(dogInformation.image_url?: "")
             dogInformation.image_url = imageUrl
 
-//            val modifiedDogInformation = dogInformation.copy(
-//                image_url = imageUrl
-//            )
-
             emit(dogInformation)
-//            supabase.from("pets")
-//                .select() {
-//                    filter {
-//                        eq("id", id)
-//                    }
-//                }.decodeAs<Dog>()
 
         } catch (e: Exception) {
             Log.d("DogRepositoryImpl", "getDogInformation: $e")
@@ -78,24 +68,45 @@ class DogRepositoryImpl : DogRepository {
         val session = supabase.auth.currentSessionOrNull()
 
         try {
+            Log.d("DogRepositoryImpl", "getDogsUser: $session")
+            val columns = Columns.raw("""
+                id,
+                image_url,
+                name,
+                breeds (
+                    id,
+                    name
+                ),
+                tags
+            """.trimIndent())
+
             val dogs = supabase.from("pets")
-                .select() {
+                .select(columns = columns) {
                     filter {
                         eq("profile_id", session?.user?.id ?: "")
                     }
                 }.decodeList<Dog>()
+
+            dogs.forEach { dog ->
+                val imageUrl = dog.image_url?.let {
+                    supabase.storage.from("image_upload").publicUrl(it)
+                }
+                dog.image_url = imageUrl
+            }
+
             emit(dogs)
         } catch (e: Exception) {
+            Log.d("DogRepositoryImpl", "getDogsUser: $e")
             null
         }
     }
 
-    override suspend fun getImageUrl(url: String): Flow<String> = flow {
-        try {
-            val imageUrl = supabase.storage.from("image_upload").publicUrl(url)
-            emit(imageUrl)
-        } catch (e: Exception) {
-            null
-        }
-    }
+//    override suspend fun getImageUrl(url: String): Flow<String> = flow {
+//        try {
+//            val imageUrl = supabase.storage.from("image_upload").publicUrl(url)
+//            emit(imageUrl)
+//        } catch (e: Exception) {
+//            null
+//        }
+//    }
 }

@@ -3,11 +3,10 @@ package com.example.dogprofile.domain.models
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class DogInformation (
+data class Dog (
+    val id: Int,
     var image_url: String?,
     val name: String,
     val breeds: breeds,
-    val birthdate: String?,
-    val profiles: profiles,
-    val description: String?
+    val tags: List<Tag>?
 )
