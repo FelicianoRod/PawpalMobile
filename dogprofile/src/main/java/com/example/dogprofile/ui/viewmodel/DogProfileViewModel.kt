@@ -12,8 +12,8 @@ class DogProfileViewModel(
     private val dogRepository: DogRepository
 ) : ViewModel() {
 
-    private val _dogList = MutableStateFlow<List<Dog>?>(emptyList())
-    val dogList: MutableStateFlow<List<Dog>?> get() = _dogList
+    private val _dogList = MutableStateFlow<List<Dog>?>(null)
+    val dogList: MutableStateFlow<List<Dog>?> = _dogList
 
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> get() = _isLoading
