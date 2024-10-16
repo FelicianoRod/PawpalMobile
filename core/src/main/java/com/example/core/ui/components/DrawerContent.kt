@@ -75,6 +75,7 @@ fun DrawerContent(navController: NavController) {
                     icon = Icons.Default.Pets,
                     label = "Mascotas",
                     notificationCount = 0,
+                    selected = currentRoute == "dog_profile",
                     modifier = Modifier.clickable {
 //                    scope.launch { drawerState.close() }
                         navController.navigate("dog_profile")
@@ -113,6 +114,7 @@ fun DrawerContent(navController: NavController) {
                 icon = Icons.Default.Output,
                 label = "Salir",
                 notificationCount = 0,
+                selected = currentRoute == "login",
                 modifier = Modifier.clickable {
 //                    scope.launch { drawerState.close() }
 //                    val signOutViewModel = SignOutViewModel()
@@ -151,7 +153,7 @@ fun DrawerItem(
         modifier = modifier
             .fillMaxWidth()
             .background(
-                if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
+                if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.90f)
                 else MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(30.dp)
             )
@@ -167,12 +169,12 @@ fun DrawerItem(
             imageVector = icon,
             contentDescription = null,
             modifier = Modifier.size(24.dp),
-            tint = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+            tint = if (selected) Color.Black else MaterialTheme.colorScheme.onSurface
         )
         Spacer(modifier = Modifier.width(12.dp))
         Text(
             text = label,
-            color = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurface
+            color = if (selected) Color.Black else MaterialTheme.colorScheme.onSurface
 //            style = MaterialTheme.typography.body1
         )
         Spacer(modifier = Modifier.weight(1f))
