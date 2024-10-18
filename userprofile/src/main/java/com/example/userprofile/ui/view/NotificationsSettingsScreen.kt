@@ -16,30 +16,26 @@ import com.example.core.ui.theme.PawpalTheme
 
 @Composable
 fun NotificationSettingsScreen(navController: NavController) {
-    PawpalTheme {
+    Scaffold(
+        topBar = { TopAppBarSecondary("Ajustes de notificaciones", navController) }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp),
+        ) {
+            Text(
+                text = "Notificaciones",
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.Black
+            )
+            Text(
+                text = "Configura cómo recibes las notificaciones de Pawpal.",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color.Gray
+            )
 
-        Scaffold(
-            topBar = { TopAppBarSecondary("Ajustes de notificaciones", navController) }
-        ) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(16.dp),
-            ) {
-                Text(
-                    text = "Notificaciones",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = Color.Black
-                )
-                Text(
-                    text = "Configura cómo recibes las notificaciones de Pawpal.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray
-                )
-
-            }
         }
-
     }
 }

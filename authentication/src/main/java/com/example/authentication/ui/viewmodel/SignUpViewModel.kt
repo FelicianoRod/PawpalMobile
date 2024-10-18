@@ -8,11 +8,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.authentication.data.models.User
+import com.example.authentication.domain.repository.AuthRepository
 import com.example.authentication.domain.viewmodel.signUpWithEmail
 import com.example.authentication.ui.model.SignUpStateUiModel
 import kotlinx.coroutines.launch
 
-class SignUpViewModel: ViewModel() {
+class SignUpViewModel(
+    private val authRepository: AuthRepository
+): ViewModel() {
 //    private val _email = MutableLiveData<String>()
 //    val email: LiveData<String> = _email
 //
@@ -225,5 +229,18 @@ class SignUpViewModel: ViewModel() {
          } catch (e: Exception) {
              Log.e("SignUpWithEmail", "Error during sign up - view", e)
          }
+    }
+
+    fun signUp() {
+        viewModelScope.launch {
+            authRepository.signUp(
+                User(
+                    name = signUpUiState.value?.name ?: "",
+                    lastName = signUpUiState.value?.lastName ?: "",
+                    email = signUpUiState.value?.email ?: "",
+                    password = signUpUiState.value?.password ?: ""
+                )
+            )
+        }
     }
 }

@@ -8,6 +8,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.authentication.data.repository.AuthRepositoryImpl
+import com.example.authentication.domain.repository.SignUpViewModelFactory
 import com.example.authentication.ui.view.LoginScreen
 import com.example.authentication.ui.view.SignUpScreen
 import com.example.authentication.ui.viewmodel.LoginViewModel
@@ -65,7 +67,10 @@ fun AppNavigation(themeStateViewModel: ThemeStateViewModel) {
                 LoginScreen(loginViewModel, navController)
             }
             composable(route = AppScreens.SignUpScreen.route) {
-                val signUpViewModel: SignUpViewModel = SignUpViewModel()
+//                val signUpViewModel: SignUpViewModel = SignUpViewModel()
+                val signUpViewModel: SignUpViewModel = viewModel(
+                    factory = SignUpViewModelFactory(AuthRepositoryImpl())
+                )
                 SignUpScreen(signUpViewModel, navController)
             }
 

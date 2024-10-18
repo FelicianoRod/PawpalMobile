@@ -109,43 +109,42 @@ fun AddDogScreen(navController: NavController, viewModel: AddDogState) {
         }
     }
 
-    PawpalTheme {
-        ModalNavigationDrawer(
-            drawerState = drawerState,
-            drawerContent = {
-                ModalDrawerSheet {
-                    DrawerContent(navController)
-                }
-            },
-        ) {
-            Scaffold(
-                topBar = { TopAppBarSecondary("Añadir mascota", navController) },
-                snackbarHost = { SnackbarHost(snackbarHostState) }
-            ) { innerPadding ->
-                Column(
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .fillMaxSize()
-                        .verticalScroll(scrollState)
-                        .padding(16.dp),
-                ) {
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet {
+                DrawerContent(navController)
+            }
+        },
+    ) {
+        Scaffold(
+            topBar = { TopAppBarSecondary("Añadir mascota", navController) },
+            snackbarHost = { SnackbarHost(snackbarHostState) }
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .verticalScroll(scrollState)
+                    .padding(16.dp),
+            ) {
 //                    Text(
 //                        text = "Añadir mascota",
 //                        style = MaterialTheme.typography.titleLarge,
 //                        color = MaterialTheme.colorScheme.primary
 //                    )
-                    Text(
-                        text = "Añade la información de tu mascota a continuación.",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.Gray
-                    )
+                Text(
+                    text = "Añade la información de tu mascota a continuación.",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color.Gray
+                )
 
 
-                    Spacer(modifier = Modifier.padding(8.dp))
-                    NameDogField(
-                        value = dogFormState.name,
-                        onValueChange = { viewModel.onNameChanged(it) }
-                        )
+                Spacer(modifier = Modifier.padding(8.dp))
+                NameDogField(
+                    value = dogFormState.name,
+                    onValueChange = { viewModel.onNameChanged(it) }
+                )
 //                    TextFieldCustom()
 //                var isChecked by remember { mutableStateOf(false) }
 //
@@ -157,58 +156,61 @@ fun AddDogScreen(navController: NavController, viewModel: AddDogState) {
 //                        onCheckedChange = { isChecked = it }
 //                    )
 //                }
-                    Spacer(modifier = Modifier.padding(8.dp))
-                    IsOwnerField(
-                        value = dogFormState.isOwner,
-                        selected = { viewModel.onIsOwnerChanged(it) }
-                    )
-                    Spacer(modifier = Modifier.padding(8.dp))
-                    BirthdateField(
-                        value = dogFormState.birthdate,
-                        onValueChanged = { viewModel.onBirthdateChanged(it) },
-                        viewModel = viewModel
-                    )
-                    Spacer(modifier = Modifier.padding(8.dp))
-                    GenderField(
-                        value = dogFormState.gender,
-                        selected = { viewModel.onGenderChanged(it) }
-                    )
-                    Spacer(modifier = Modifier.padding(8.dp))
-                    BreedField(
-                        breedsList = dogFormState.breeds,
-                        onValueChanged = { viewModel.onBreedIdSelected(it) }
-                    )
-                    Spacer(modifier = Modifier.padding(8.dp))
-                    DescriptionField(
-                        value = dogFormState.description,
-                        onValueChanged = { viewModel.onDescriptionChanged(it) }
-                    )
-                    Spacer(modifier = Modifier.padding(8.dp))
-                    WeightField(
-                        value = dogFormState.weight.toString(),
-                        onValueChanged = { viewModel.onWeightChanged(it.toDouble()) }
-                    )
-                    Spacer(modifier = Modifier.padding(8.dp))
-                    TagsDogField()
-                    Row(
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(0.dp, 16.dp, 0.dp, 16.dp),
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.Center
-                    ) {
-                        Button(
-                            modifier = Modifier.width(180.dp).height(48.dp),
-                            onClick = {
-                                viewModel.addDog()
-                            }
-                        )  {
-                            Text(
-                                text = "Añadir mascota",
-                                style = MaterialTheme.typography.bodyMedium
-                            )
+                Spacer(modifier = Modifier.padding(8.dp))
+                IsOwnerField(
+                    value = dogFormState.isOwner,
+                    selected = { viewModel.onIsOwnerChanged(it) }
+                )
+                Spacer(modifier = Modifier.padding(8.dp))
+                BirthdateField(
+                    value = dogFormState.birthdate,
+                    onValueChanged = { viewModel.onBirthdateChanged(it) },
+                    viewModel = viewModel
+                )
+                Spacer(modifier = Modifier.padding(8.dp))
+                GenderField(
+                    value = dogFormState.gender,
+                    selected = { viewModel.onGenderChanged(it) }
+                )
+                Spacer(modifier = Modifier.padding(8.dp))
+                BreedField(
+                    breedsList = dogFormState.breeds,
+                    onValueChanged = { viewModel.onBreedIdSelected(it) }
+                )
+                Spacer(modifier = Modifier.padding(8.dp))
+                DescriptionField(
+                    value = dogFormState.description,
+                    onValueChanged = { viewModel.onDescriptionChanged(it) }
+                )
+                Spacer(modifier = Modifier.padding(8.dp))
+                WeightField(
+                    value = dogFormState.weight.toString(),
+                    onValueChanged = { viewModel.onWeightChanged(it.toDouble()) }
+                )
+                Spacer(modifier = Modifier.padding(8.dp))
+                TagsDogField()
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp, 16.dp, 0.dp, 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Button(
+                        modifier = Modifier
+                            .width(180.dp)
+                            .height(48.dp),
+                        onClick = {
+                            viewModel.addDog()
                         }
-
+                    ) {
+                        Text(
+                            text = "Añadir mascota",
+                            style = MaterialTheme.typography.bodyMedium
+                        )
                     }
+
+                }
 //                    Box(
 //                        modifier = Modifier.fillMaxSize(),
 //                    ) {
@@ -221,7 +223,6 @@ fun AddDogScreen(navController: NavController, viewModel: AddDogState) {
 //                    }
 
 
-                }
             }
         }
     }
@@ -311,6 +312,7 @@ fun TagsDogField() {
         }
     }
 }
+
 @Composable
 fun TagChip(tag: String, onRemove: () -> Unit) {
     Box(
@@ -357,7 +359,7 @@ fun WeightField(
         value = value,
         onValueChange = onValueChanged,
         label = "Peso",
-        placeholder= "5.5"
+        placeholder = "5.5"
     )
 }
 

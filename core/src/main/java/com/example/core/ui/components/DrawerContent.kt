@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.material.icons.filled.Output
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Pets
@@ -33,8 +32,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 
-//import java.lang.reflect.Modifier
-
 @Preview(showBackground = true)
 @Composable
 fun DrawerPreview() {
@@ -49,7 +46,6 @@ fun DrawerContent(navController: NavController) {
     Box(
         modifier = Modifier.fillMaxSize().padding(12.dp)
     ) {
-//        DrawerSection(navController)
         Column(
             modifier = Modifier.align(Alignment.TopStart)
         ) {
@@ -63,13 +59,8 @@ fun DrawerContent(navController: NavController) {
                     notificationCount = 0,
                     selected = currentRoute == "user_profile",
                     modifier = Modifier.clickable {
-//                    scope.launch { drawerState.close() }
                         navController.navigate("user_profile")
                     }
-//                modifier = Modifier.clickable {
-//                    scope.launch { drawerState.close() }
-//                    navController.navigate(Screen.Home.route)
-//                }
                 )
                 DrawerItem(
                     icon = Icons.Default.Pets,
@@ -77,27 +68,10 @@ fun DrawerContent(navController: NavController) {
                     notificationCount = 0,
                     selected = currentRoute == "dog_profile",
                     modifier = Modifier.clickable {
-//                    scope.launch { drawerState.close() }
                         navController.navigate("dog_profile")
                     }
                 )
-
                 Spacer(modifier = Modifier.height(32.dp))
-//            Row() {
-//                Spacer(modifier = Modifier.width(16.dp))
-//                Text(text = "Comunidad")
-//            }
-//            Spacer(modifier = Modifier.height(16.dp))
-//            DrawerItem(
-//                icon = Icons.Default.Forum,
-//                label = "Foro",
-//                notificationCount = 1,
-//            )
-//            Divider(
-//                color = Color.Gray,
-//                thickness = 1.dp,
-//                modifier = Modifier.padding(horizontal = 16.dp),
-//            )
             }
         }
         Column(
@@ -116,29 +90,15 @@ fun DrawerContent(navController: NavController) {
                 notificationCount = 0,
                 selected = currentRoute == "login",
                 modifier = Modifier.clickable {
-//                    scope.launch { drawerState.close() }
-//                    val signOutViewModel = SignOutViewModel()
-//                    signOutViewModel.signOut()
                     navController.navigate("login") {
                         popUpTo(navController.graph.startDestinationId) { inclusive = true}
                         launchSingleTop = true
 
                     }
                 }
-//                modifier = Modifier.clickable {
-//                    scope.launch { drawerState.close() }
-//                    navController.navigate(Screen.Home.route)
-//                }
             )
-
-
         }
     }
-}
-
-@Composable
-fun DrawerSection(navController: NavController) {
-
 }
 
 @Composable
@@ -157,12 +117,7 @@ fun DrawerItem(
                 else MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(30.dp)
             )
-//            .padding(horizontal = 16.dp, vertical = 8.dp)
-//            .background(Color(0xFFEDE7F6), shape = RoundedCornerShape(24.dp)) no eliminar
-//            .background(MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(30.dp))
             .padding(horizontal = 16.dp, vertical = 16.dp),
-
-
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
@@ -175,13 +130,10 @@ fun DrawerItem(
         Text(
             text = label,
             color = if (selected) Color.Black else MaterialTheme.colorScheme.onSurface
-//            style = MaterialTheme.typography.body1
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
             text = if (notificationCount != 0) "$notificationCount" else "",
-//            style = MaterialTheme.typography.body2
         )
-
     }
 }

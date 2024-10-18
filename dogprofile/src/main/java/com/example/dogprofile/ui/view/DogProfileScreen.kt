@@ -58,7 +58,10 @@ import kotlin.random.Random
 @Preview(showBackground = true)
 @Composable
 fun DogProfileScreenPreview() {
-    DogProfileScreen(navController = rememberNavController(), viewModel = DogProfileViewModel(dogRepository = DogRepositoryImpl()))
+    DogProfileScreen(
+        navController = rememberNavController(),
+        viewModel = DogProfileViewModel(dogRepository = DogRepositoryImpl())
+    )
 }
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
@@ -70,65 +73,63 @@ fun DogProfileScreen(navController: NavController, viewModel: DogProfileViewMode
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    PawpalTheme {
-        ModalNavigationDrawer(
-            drawerState = drawerState,
-            drawerContent = {
-                ModalDrawerSheet {
-                    DrawerContent(navController)
-                }
-            },
-        ) {
-            Scaffold(
-                topBar = { TopAppBarPrimary("Tus mascotas", drawerState, scope) },
-                floatingActionButton = { AddDogButton(navController) }
-            ) { innerPadding ->
-                Column(
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .fillMaxSize()
-                        .padding(16.dp),
-                ) {
-                    Text(
-                        text = "Gestiona a tus amigos peludos con facilidad.",
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                    Spacer(modifier = Modifier.padding(8.dp))
-                    if (isLoading) {
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet {
+                DrawerContent(navController)
+            }
+        },
+    ) {
+        Scaffold(
+            topBar = { TopAppBarPrimary("Tus mascotas", drawerState, scope) },
+            floatingActionButton = { AddDogButton(navController) }
+        ) { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize()
+                    .padding(16.dp),
+            ) {
+                Text(
+                    text = "Gestiona a tus amigos peludos con facilidad.",
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                Spacer(modifier = Modifier.padding(8.dp))
+                if (isLoading) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                } else {
+                    if (dogList.isNullOrEmpty()) {
                         Column(
                             modifier = Modifier.fillMaxSize(),
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center
                         ) {
-                            CircularProgressIndicator(
-                                color = MaterialTheme.colorScheme.primary
+                            Text(
+                                text = "No hay mascotas registradas",
+                                textAlign = TextAlign.Center,
+                                style = MaterialTheme.typography.labelMedium
                             )
                         }
                     } else {
-                        if (dogList.isNullOrEmpty()) {
-                            Column(
-                                modifier = Modifier.fillMaxSize(),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.Center
-                            ) {
-                                Text(
-                                    text = "No hay mascotas registradas",
-                                    textAlign = TextAlign.Center,
-                                    style = MaterialTheme.typography.labelMedium
-                                )
-                            }
-                        } else {
-                            LazyVerticalGrid(
-                                columns = GridCells.Fixed(2),
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2),
 //                                contentPadding = PaddingValues(8.dp),
-                                modifier = Modifier
-                                    .fillMaxSize(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                                verticalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                items(dogList!!) { dog ->
-                                    DogItem(dog, navController)
-                                }
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            items(dogList!!) { dog ->
+                                DogItem(dog, navController)
                             }
                         }
                     }
@@ -159,7 +160,7 @@ fun DogItem(dog: Dog, navController: NavController) {
                     .height(150.dp)
                     .clip(RoundedCornerShape(8.dp)),
                 contentAlignment = Alignment.Center,
-                ) {
+            ) {
                 SubcomposeAsyncImage(
                     model = dog.image_url,
                     contentDescription = "Dog Image",

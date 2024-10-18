@@ -1,4 +1,4 @@
-package com.example.authentication.data.model
+package com.example.authentication.data.models
 
 sealed class UserState {
     object Loading : UserState()

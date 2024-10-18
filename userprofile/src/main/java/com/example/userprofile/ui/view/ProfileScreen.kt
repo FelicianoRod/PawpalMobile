@@ -55,6 +55,7 @@ object DateConverter {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun EditUserProfileScreenPreview() {
@@ -68,53 +69,51 @@ fun ProfileScreen(viewModel: ProfileStateViewModel, navController: NavController
     viewModel.getProfileUi()
     val profileState = viewModel.profileState.collectAsState()
 
-    PawpalTheme {
-        Scaffold(
-            topBar = { TopAppBarSecondary("Perfil", navController) }
-        ) { innerPadding ->
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(innerPadding)
-                    .padding(16.dp),
-            ) {
-                Text(
-                    text = "Así es como los demás te verán en pawpal.",
-                    style = MaterialTheme.typography.bodySmall,
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                NameProfileField(
-                    value = profileState.value.name,
-                    onValueChange = { viewModel.onNameChanged(it) }
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                BirthDateProfileField(
-                    value = profileState.value.birthDate,
-                    onValueChange = { viewModel.onBirthDateChanged(it)},
-                    viewModel = viewModel
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                CityProfileField(
-                    value = profileState.value.city,
-                    onValueChange = { viewModel.onCityChanged(it)}
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                BiographyProfileField(
-                    value = profileState.value.biography,
-                    onValueChange = { viewModel.onBiographyChanged(it)}
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                PhoneProfileField(
-                    value = profileState.value.phone,
-                    onValueChange = { viewModel.onPhoneChanged(it)}
-                )
-                Button(onClick = {
-                    viewModel.updateProfileClickable()
-                }) {
-                    Text(text = "Actualizar perfil")
-                }
-                Spacer(modifier = Modifier.height(16.dp))
+    Scaffold(
+        topBar = { TopAppBarSecondary("Perfil", navController) }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(16.dp),
+        ) {
+            Text(
+                text = "Así es como los demás te verán en pawpal.",
+                style = MaterialTheme.typography.bodySmall,
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            NameProfileField(
+                value = profileState.value.name,
+                onValueChange = { viewModel.onNameChanged(it) }
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            BirthDateProfileField(
+                value = profileState.value.birthDate,
+                onValueChange = { viewModel.onBirthDateChanged(it) },
+                viewModel = viewModel
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            CityProfileField(
+                value = profileState.value.city,
+                onValueChange = { viewModel.onCityChanged(it) }
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            BiographyProfileField(
+                value = profileState.value.biography,
+                onValueChange = { viewModel.onBiographyChanged(it) }
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            PhoneProfileField(
+                value = profileState.value.phone,
+                onValueChange = { viewModel.onPhoneChanged(it) }
+            )
+            Button(onClick = {
+                viewModel.updateProfileClickable()
+            }) {
+                Text(text = "Actualizar perfil")
             }
+            Spacer(modifier = Modifier.height(16.dp))
         }
     }
 }
@@ -146,7 +145,7 @@ fun BirthDateProfileField(
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
     val datePickerState = rememberDatePickerState()
-    
+
     TextFieldForm(
         value = value,
         onValueChange = onValueChange,
@@ -161,7 +160,7 @@ fun BirthDateProfileField(
         },
         trailingIcon = {
             Icon(
-               imageVector = Icons.Default.DateRange,
+                imageVector = Icons.Default.DateRange,
                 contentDescription = "Fecha de nacimiento",
                 modifier = Modifier.clickable {
                     showDatePicker = true
@@ -184,7 +183,7 @@ fun BirthDateProfileField(
                 }
             },
             dismissButton = {
-                TextButton(onClick = { showDatePicker = false}) {
+                TextButton(onClick = { showDatePicker = false }) {
                     Text("Cancel")
                 }
             }
@@ -221,7 +220,7 @@ fun BiographyProfileField(
         onValueChange = onValueChange,
         label = "Biografía",
         placeholder = "Me gustan los perros.",
-        supportingText =  "Una breve descripción de ti que será visible en tu perfil.",
+        supportingText = "Una breve descripción de ti que será visible en tu perfil.",
         errorList = listOf(),
         isError = false,
         keyboardType = KeyboardType.Text,

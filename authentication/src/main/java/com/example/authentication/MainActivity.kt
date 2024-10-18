@@ -18,7 +18,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             PawpalTheme {
-                SignUpScreen(viewModel = SignUpViewModel(), navController = NavController(LocalContext.current))
+//                SignUpScreen(viewModel = SignUpViewModel(), navController = NavController(LocalContext.current))
             }
             WebView.setWebContentsDebuggingEnabled(true)
         }

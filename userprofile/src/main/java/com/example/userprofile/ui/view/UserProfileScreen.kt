@@ -55,17 +55,17 @@ import com.example.userprofile.R
 import com.example.userprofile.ui.models.SettingsOptionUserProfile
 import com.example.userprofile.ui.viewmodel.UserProfileStateViewModel
 
-
 @Preview(showBackground = true)
 @Composable
 fun UserProfileScreenPreview() {
-    UserProfileScreen(navController = rememberNavController(), viewModel = UserProfileStateViewModel())
+    UserProfileScreen(
+        navController = rememberNavController(),
+        viewModel = UserProfileStateViewModel()
+    )
 }
 
 @Composable
 fun UserProfileScreen(navController: NavController, viewModel: UserProfileStateViewModel) {
-
-//    val userProfileViewModel: UserProfileStateViewModel by viewModels()
 
     val name by viewModel.name.collectAsState()
     val biography by viewModel.biography.collectAsState()
@@ -83,11 +83,23 @@ fun UserProfileScreen(navController: NavController, viewModel: UserProfileStateV
             text = "Apariencia",
             route = ({ navController.navigate("appearance_screen") }),
         ),
+//        SettingsOptionUserProfile(
+//            icon = R.drawable.notification0,
+//            text = "Notificaciones",
+//            route = ({ navController.navigate("notification_settings_screen") }),
+//        ),
         SettingsOptionUserProfile(
-            icon = R.drawable.profile,
-            text = "Notificaciones",
-            route = ({ navController.navigate("notification_settings_screen") }),
-        ),
+            icon = R.drawable.logout,
+            text = "Cerrar sesión",
+            route = ({
+                navController.navigate("login") {
+                    popUpTo(navController.graph.startDestinationId) { inclusive = true }
+                    launchSingleTop = true
+
+
+                }
+            }),
+        )
 //        SettingsOptionUserProfile(
 //            icon = R.drawable.profile,
 //            text = "Visualización",
@@ -98,59 +110,58 @@ fun UserProfileScreen(navController: NavController, viewModel: UserProfileStateV
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    PawpalTheme {
-        ModalNavigationDrawer(
-            drawerState = drawerState,
-            drawerContent = {
-                ModalDrawerSheet {
-                    DrawerContent(navController)
+    ModalNavigationDrawer(
+        drawerState = drawerState,
+        drawerContent = {
+            ModalDrawerSheet {
+                DrawerContent(navController)
+            }
+        },
+    ) {
+        Scaffold(
+            topBar = { TopAppBarPrimary("Cuenta", drawerState, scope) }
+        ) { innerPadding ->
+            if (isLoading) {
+                Box(Modifier.fillMaxSize()) {
+                    CircularProgressIndicator(Modifier.align(Alignment.Center))
                 }
-            },
-        ) {
-            Scaffold(
-                topBar = { TopAppBarPrimary("Cuenta", drawerState, scope) }
-            ) { innerPadding ->
-                if (isLoading) {
-                    Box(Modifier.fillMaxSize()) {
-                        CircularProgressIndicator(Modifier.align(Alignment.Center))
-                    }
-                } else {
-                    Column(
+            } else {
+                Column(
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Box(
                         modifier = Modifier
-                            .padding(innerPadding)
-                            .fillMaxSize()
-                            .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally
+                            .size(120.dp)
+                            .clip(CircleShape)
+                            .background(MaterialTheme.colorScheme.primary)
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .size(120.dp)
-                                .clip(CircleShape)
-                                .background(MaterialTheme.colorScheme.primary)
-                        ) {
-                            Image(
-                                painter = rememberImagePainter(
-                                    data = avatarUrl
-                                ),
-                                contentDescription = null,
-                                contentScale = ContentScale.Crop,
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        }
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = name,
-                            style = MaterialTheme.typography.headlineMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.Black
+                        Image(
+                            painter = rememberImagePainter(
+                                data = avatarUrl
+                            ),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier.fillMaxSize()
                         )
-                        Text(
-                            text = biography,
-                            style = MaterialTheme.typography.headlineMedium,
-                            color = Color.Gray,
-                            textAlign = TextAlign.Center
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = name,
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black
+                    )
+                    Text(
+                        text = biography,
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = Color.Gray,
+                        textAlign = TextAlign.Center
 
-                        )
+                    )
 //                        Spacer(modifier = Modifier.height(16.dp))
 //                        Row(
 //                            horizontalArrangement = Arrangement.SpaceEvenly,
@@ -160,41 +171,41 @@ fun UserProfileScreen(navController: NavController, viewModel: UserProfileStateV
 //                            ActionButton("Notific.")
 //                            ActionButton("Otros.")
 //                        }
-                        Spacer(modifier = Modifier.height(24.dp))
-                        LazyColumn(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(8.dp),
-                        ) {
-                            items(options) { option ->
-                                SettingOptionItem(option = option)
-                            }
+                    Spacer(modifier = Modifier.height(24.dp))
+                    LazyColumn(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp),
+                    ) {
+                        items(options) { option ->
+                            SettingOptionItem(option = option)
                         }
                     }
                 }
             }
         }
     }
+
 }
 
-@Composable
-fun ActionButton(text: String) {
-    Button(
-        onClick = { /* Handle button click */ },
-        shape = RoundedCornerShape(50),
-        modifier = Modifier
-            .padding(8.dp)
-            .height(50.dp),
-        colors = ButtonColors(
-            containerColor = Color(0xFFC8E0B4),
-            contentColor = Color.Black,
-            disabledContainerColor = Color(0xFFF78058),
-            disabledContentColor = Color.White
-        )
-    ) {
-        Text(text)
-    }
-}
+//@Composable
+//fun ActionButton(text: String) {
+//    Button(
+//        onClick = { /* Handle button click */ },
+//        shape = RoundedCornerShape(50),
+//        modifier = Modifier
+//            .padding(8.dp)
+//            .height(50.dp),
+//        colors = ButtonColors(
+//            containerColor = Color(0xFFC8E0B4),
+//            contentColor = Color.Black,
+//            disabledContainerColor = Color(0xFFF78058),
+//            disabledContentColor = Color.White
+//        )
+//    ) {
+//        Text(text)
+//    }
+//}
 
 @Composable
 fun SettingOptionItem(option: SettingsOptionUserProfile) {
@@ -215,7 +226,8 @@ fun SettingOptionItem(option: SettingsOptionUserProfile) {
                 modifier = Modifier
                     .size(60.dp)
                     .background(
-                        Color(0xFFC8E0B4),
+                        MaterialTheme.colorScheme.primary,
+//                        Color(0xFFC8E0B4),
                         shape = CircleShape,
                     ),
                 contentAlignment = Alignment.Center,

@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,7 +33,7 @@ fun TextFieldForm(
 //    keyboardOptions: KeyboardOptions,
     keyboardType: KeyboardType = KeyboardType.Text,
     trailingIcon: @Composable (() -> Unit)? = null,
-
+    visualTransformation: VisualTransformation = VisualTransformation.None,
     ) {
     TextField(
 //        Text
@@ -63,7 +64,7 @@ fun TextFieldForm(
         prefix = null,
         suffix = null,
         isError = isError,
-//        visualTransformation
+        visualTransformation = visualTransformation,
         singleLine = singleLine,
         maxLines = maxLines,
         minLines = minLines,

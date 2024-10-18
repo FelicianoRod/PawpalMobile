@@ -38,8 +38,8 @@ fun AppearanceScreenPreview() {
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun AppearanceScreen(navController: NavController, viewModel: ThemeStateViewModel) {
-    val themeMode = viewModel.themeMode.observeAsState(ThemeMode.System)
 
+    val themeMode = viewModel.themeMode.observeAsState(ThemeMode.System)
 
         Scaffold(
             topBar = { TopAppBarSecondary("Apariencia", navController)}

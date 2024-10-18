@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
+import com.example.authentication.data.repository.AuthRepositoryImpl
 import com.example.authentication.ui.model.SignUpStateUiModel
 import com.example.authentication.ui.components.ButtonCustom
 import com.example.authentication.ui.components.TextFieldCustom
@@ -33,7 +34,7 @@ import com.example.authentication.ui.viewmodel.SignUpViewModel
 @Preview(showBackground = true)
 @Composable
 fun SignUpScreenPreview() {
-    SignUpScreen(viewModel = SignUpViewModel(), navController = NavController(LocalContext.current))
+    SignUpScreen(viewModel = SignUpViewModel(authRepository = AuthRepositoryImpl()), navController = NavController(LocalContext.current))
 }
 
 @Composable
@@ -132,7 +133,7 @@ fun SignUp(viewModel: SignUpViewModel) {
             )
             SignUpButton(signUpUiState.validForm)
 
-            Button(onClick = { viewModel.signUpButton() }) {
+            Button(onClick = { viewModel.signUp() }) {
                 Text(text = "Registrarse")
             }
         }
