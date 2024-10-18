@@ -3,11 +3,15 @@ package com.example.userprofile.ui.view
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material3.Button
@@ -17,15 +21,21 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SelectableDates
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
@@ -40,6 +50,9 @@ import com.example.userprofile.ui.viewmodel.ProfileStateViewModel
 import kotlinx.datetime.Instant
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 object DateConverter {
     @RequiresApi(Build.VERSION_CODES.O)
@@ -69,8 +82,26 @@ fun ProfileScreen(viewModel: ProfileStateViewModel, navController: NavController
     viewModel.getProfileUi()
     val profileState = viewModel.profileState.collectAsState()
 
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    val showMessage by viewModel.showMessage.collectAsState()
+    val message by viewModel.message.collectAsState()
+
+    LaunchedEffect(showMessage) {
+        if (showMessage) {
+            snackbarHostState.showSnackbar(
+                message = message,
+                duration = SnackbarDuration.Short
+            )
+//            viewModel._noti.value = false
+
+        }
+    }
+
     Scaffold(
-        topBar = { TopAppBarSecondary("Perfil", navController) }
+        topBar = { TopAppBarSecondary("Perfil", navController) },
+                snackbarHost = { SnackbarHost(snackbarHostState) }
+
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -104,15 +135,37 @@ fun ProfileScreen(viewModel: ProfileStateViewModel, navController: NavController
                 onValueChange = { viewModel.onBiographyChanged(it) }
             )
             Spacer(modifier = Modifier.height(16.dp))
-            PhoneProfileField(
-                value = profileState.value.phone,
-                onValueChange = { viewModel.onPhoneChanged(it) }
-            )
-            Button(onClick = {
-                viewModel.updateProfileClickable()
-            }) {
-                Text(text = "Actualizar perfil")
+//            PhoneProfileField(
+//                value = profileState.value.phone,
+//                onValueChange = { viewModel.onPhoneChanged(it) }
+//            )
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 16.dp, 0.dp, 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(
+                    modifier = Modifier
+                        .width(180.dp)
+                        .height(48.dp),
+                    onClick = {
+                        viewModel.updateProfileClickable()
+                    }
+                ) {
+                    Text(
+                        text = "Actualizar perfil",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+
             }
+//            Button(onClick = {
+//                viewModel.updateProfileClickable()
+//            }) {
+//                Text(text = "Actualizar perfil")
+//            }
             Spacer(modifier = Modifier.height(16.dp))
         }
     }
@@ -144,7 +197,28 @@ fun BirthDateProfileField(
     viewModel: ProfileStateViewModel
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
-    val datePickerState = rememberDatePickerState()
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = System.currentTimeMillis(),
+        selectableDates = object : SelectableDates {  // Envolver en un objeto SelectableDates
+            override fun isSelectableDate(dateInMillis: Long): Boolean {
+                return dateInMillis <= System.currentTimeMillis()
+            }
+        },
+        yearRange = 2000..2024
+
+    )
+
+    fun convertMillisToDate(millis: Long): String {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = millis
+        calendar.add(Calendar.DAY_OF_YEAR, 1) // Suma un día
+//        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+//        return formatter.format(Date(millis))
+        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+        formatter.timeZone = java.util.TimeZone.getDefault() // Usa la zona horaria del sistema
+//        return formatter.format(Date(millis))
+        return formatter.format(calendar.time)
+    }
 
     TextFieldForm(
         value = value,
@@ -171,10 +245,21 @@ fun BirthDateProfileField(
     if (showDatePicker) {
         DatePickerDialog(
             onDismissRequest = { showDatePicker = false },
+//            confirmButton = {
+//                TextButton(onClick = {
+//                    if (datePickerState.selectedDateMillis != null) {
+//                        val date = millisToFormattedDate(datePickerState.selectedDateMillis!!)
+//                        viewModel.onBirthDateChanged(date)
+//                    }
+//                    showDatePicker = false
+//                }) {
+//                    Text("OK")
+//                }
+//            },
             confirmButton = {
                 TextButton(onClick = {
                     if (datePickerState.selectedDateMillis != null) {
-                        val date = millisToFormattedDate(datePickerState.selectedDateMillis!!)
+                        val date = convertMillisToDate(datePickerState.selectedDateMillis!!)
                         viewModel.onBirthDateChanged(date)
                     }
                     showDatePicker = false

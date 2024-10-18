@@ -18,6 +18,12 @@ class ProfileStateViewModel : ViewModel() {
     private val _profileState = MutableStateFlow(ProfileStateModel())
     val profileState: StateFlow<ProfileStateModel> = _profileState.asStateFlow()
 
+    private val _showMessage = MutableStateFlow(false)
+    val showMessage: StateFlow<Boolean> = _showMessage.asStateFlow()
+
+    private val _message = MutableStateFlow("")
+    val message: StateFlow<String> = _message.asStateFlow()
+
     fun onNameChanged(name: String) {
         val currentState = _profileState.value
         _profileState.value = currentState.copy(name = name)
@@ -75,7 +81,7 @@ class ProfileStateViewModel : ViewModel() {
 
         viewModelScope.launch {
             withContext(Dispatchers.Main) {
-                profileViewModel.updateProfileSupabase(
+                val result = profileViewModel.updateProfileSupabase(
                     name = currentState.name,
                     birthDate = currentState.birthDate,
                     city =  currentState.city,
@@ -88,6 +94,12 @@ class ProfileStateViewModel : ViewModel() {
                         val message = "No se pudo actualizar tu perfil"
                     }
                 )
+                if (result) {
+                    _message.value = "Tu perfil ha sido actualizado"
+                } else {
+                    _message.value = "No se pudo actualizar tu perfil"
+                }
+                _showMessage.value = true
             }
         }
 

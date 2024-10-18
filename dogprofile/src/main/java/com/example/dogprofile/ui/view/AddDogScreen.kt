@@ -38,6 +38,7 @@ import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
@@ -72,8 +73,10 @@ import com.example.core.ui.theme.PawpalTheme
 import com.example.dogprofile.domain.Breed
 import com.example.dogprofile.ui.viewmodel.AddDogState
 import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import java.util.TimeZone
 
 @Preview(showBackground = true)
 @Composable
@@ -188,7 +191,7 @@ fun AddDogScreen(navController: NavController, viewModel: AddDogState) {
                     onValueChanged = { viewModel.onWeightChanged(it.toDouble()) }
                 )
                 Spacer(modifier = Modifier.padding(8.dp))
-                TagsDogField()
+//                TagsDogField()
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -473,12 +476,28 @@ fun BirthdateField(
     viewModel: AddDogState
 ) {
     fun convertMillisToDate(millis: Long): String {
+        val calendar = Calendar.getInstance()
+        calendar.timeInMillis = millis
+        calendar.add(Calendar.DAY_OF_YEAR, 1) // Suma un día
+//        val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+//        return formatter.format(Date(millis))
         val formatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-        return formatter.format(Date(millis))
+        formatter.timeZone = TimeZone.getDefault() // Usa la zona horaria del sistema
+//        return formatter.format(Date(millis))
+        return formatter.format(calendar.time)
     }
 
     var showDatePicker by remember { mutableStateOf(false) }
-    val datePickerState = rememberDatePickerState()
+    val datePickerState = rememberDatePickerState(
+        initialSelectedDateMillis = System.currentTimeMillis(),
+        selectableDates = object : SelectableDates {  // Envolver en un objeto SelectableDates
+            override fun isSelectableDate(dateInMillis: Long): Boolean {
+                return dateInMillis <= System.currentTimeMillis()
+            }
+        },
+        yearRange = 2000..2024
+
+    )
 //    val selectedDate = datePickerState.selectedDateMillis?.let {
 //        convertMillisToDate(it)
 //    } ?: ""

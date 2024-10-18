@@ -43,9 +43,9 @@ class ProfileViewModel : ViewModel() {
         phone: String,
         onSuccess: (String) -> Unit,
         onError: (String) -> Unit
-    ) {
-        viewModelScope.launch {
-            withContext(Dispatchers.IO) {
+    ): Boolean {
+//         viewModelScope.launch {
+            return withContext(Dispatchers.IO) {
 
                 val session = supabase.auth.currentSessionOrNull()
 
@@ -73,15 +73,17 @@ class ProfileViewModel : ViewModel() {
                             onError("No existe una sesión")
                         }
                     }
+                    true
                 } catch (e: Exception) {
                     Log.e("Profile-Feliciano", "Error: ", e)
                     withContext(Dispatchers.Main) {
                         onError("No se pudo actualizar tu perfil")
                     }
+                    false
                 }
             }
         }
-    }
+//    }
 }
 
 
