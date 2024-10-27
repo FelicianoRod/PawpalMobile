@@ -13,7 +13,9 @@ import com.example.core.ui.theme.PawpalTheme
 import com.example.pawpal.navigation.AppNavigation
 import com.example.userprofile.ui.viewmodel.ThemeMode
 import com.example.userprofile.ui.viewmodel.ThemeStateViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

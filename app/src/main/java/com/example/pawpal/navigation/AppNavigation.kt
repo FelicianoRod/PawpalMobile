@@ -104,11 +104,16 @@ fun AppNavigation(themeStateViewModel: ThemeStateViewModel) {
 //            val dogStateViewModel = DogStateViewModel()
 //                dogStateViewModel.getDogsUserList()
 //            DogProfileScreen(navController, dogStateViewModel)
-                val dogProfileViewModel: DogProfileViewModel = viewModel(
-                    factory = DogProfileViewModelFactory(DogRepositoryImpl())
-                )
-                dogProfileViewModel.getDogsUserList()
-                DogProfileScreen(navController, dogProfileViewModel)
+
+
+
+//                val dogProfileViewModel: DogProfileViewModel = viewModel(
+//                    factory = DogProfileViewModelFactory(DogRepositoryImpl())
+//                )
+
+//                val dogProfileViewModel = DogProfileViewModel()
+//                dogProfileViewModel.getDogsUserList()
+                DogProfileScreen(navController)
             }
 
             composable(route = AppScreens.AddDogScreen.route) {

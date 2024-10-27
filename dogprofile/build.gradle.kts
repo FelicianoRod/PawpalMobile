@@ -3,7 +3,10 @@ plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.serialization)
-
+//    Dagger Hilt
+    id("kotlin-kapt")
+//    id("kapt")
+    alias(libs.plugins.com.google.dagger.hilt.android)
 }
 
 android {
@@ -81,6 +84,11 @@ dependencies {
     implementation(libs.io.github.jan.tennert.supabase.gotrue.kt)
     implementation(libs.io.github.jan.tennert.supabase.realtime.kt)
     implementation(libs.io.github.jan.tennert.supabase.storage.kt)
+    //    Dagger Hilt
+    implementation(libs.com.google.dagger.hilt.android)
+    kapt(libs.com.google.dagger.hilt.android.compiler)
+//    hilt Navigation Compose
+    implementation(libs.androidx.hilt.hilt.navigation.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

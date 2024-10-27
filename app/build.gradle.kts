@@ -1,6 +1,10 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+//    Dagger Hilt
+    id("kotlin-kapt")
+//    id("kapt")
+    alias(libs.plugins.com.google.dagger.hilt.android)
 }
 
 android {
@@ -71,6 +75,9 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(project(":authentication"))
     implementation(libs.androidx.runtime.livedata)
+//    Dagger Hilt
+    implementation(libs.com.google.dagger.hilt.android)
+    kapt(libs.com.google.dagger.hilt.android.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

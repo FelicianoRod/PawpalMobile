@@ -43,6 +43,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.SubcomposeAsyncImage
@@ -66,7 +67,9 @@ fun DogProfileScreenPreview() {
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun DogProfileScreen(navController: NavController, viewModel: DogProfileViewModel) {
+fun DogProfileScreen(navController: NavController, viewModel: DogProfileViewModel = hiltViewModel()) {
+
+    viewModel.getDogsUserList()
 
     val isLoading by viewModel.isLoading.collectAsState()
     val dogList by viewModel.dogList.collectAsState()

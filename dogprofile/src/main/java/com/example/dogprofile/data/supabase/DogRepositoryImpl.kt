@@ -12,8 +12,9 @@ import io.github.jan.supabase.postgrest.query.Columns
 import io.github.jan.supabase.storage.storage
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class DogRepositoryImpl : DogRepository {
+class DogRepositoryImpl @Inject constructor() : DogRepository {
 
     override suspend fun getDogInformation(id: Int): Flow<DogInformation> = flow {
         try {
