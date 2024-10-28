@@ -16,14 +16,12 @@ import com.example.authentication.ui.viewmodel.LoginViewModel
 import com.example.authentication.ui.viewmodel.SignUpViewModel
 import com.example.dogprofile.data.supabase.DogRepositoryImpl
 import com.example.dogprofile.domain.repository.DogInformationViewModelFactory
-import com.example.dogprofile.domain.repository.DogProfileViewModelFactory
 import com.example.dogprofile.ui.view.AddDogScreen
 import com.example.dogprofile.ui.view.DogInformationScreen
 import com.example.dogprofile.ui.view.DogProfileScreen
 import com.example.dogprofile.ui.viewmodel.AddDogState
 import com.example.dogprofile.ui.viewmodel.DogInformationViewModel
-import com.example.dogprofile.ui.viewmodel.DogProfileViewModel
-import com.example.home.ui.view.HomeScreen
+import com.example.home.ui.screens.HomeScreen
 import com.example.pawpal.screens.FirstScreen
 import com.example.pawpal.screens.SecondScreen
 import com.example.pawpal.ui.view.SplashScreen
