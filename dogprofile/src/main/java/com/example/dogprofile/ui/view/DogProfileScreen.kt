@@ -65,7 +65,7 @@ fun DogProfileScreenPreview() {
     )
 }
 
-@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
+//@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun DogProfileScreen(navController: NavController, viewModel: DogProfileViewModel = hiltViewModel()) {
 

@@ -2,6 +2,12 @@ plugins {
     alias(libs.plugins.android.library)
 //    alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    //    Serialization
+    alias(libs.plugins.serialization)
+    //    Dagger Hilt
+    id("kotlin-kapt")
+    //    id("kapt")
+    alias(libs.plugins.com.google.dagger.hilt.android)
 }
 
 android {
@@ -51,15 +57,14 @@ android {
 }
 
 dependencies {
+
 //    Icons
     implementation(libs.androidx.compose.material.icons.extended)
 
 //    Navigation
     implementation(libs.androidx.navigation.compose)
-
+//    Criptografía
     implementation(libs.androidx.security.crypto.ktx)
-
-
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -76,6 +81,11 @@ dependencies {
     implementation(libs.io.github.jan.tennert.supabase.gotrue.kt)
     implementation(libs.io.github.jan.tennert.supabase.realtime.kt)
     implementation(libs.io.github.jan.tennert.supabase.storage.kt)
+    //    Dagger Hilt
+    implementation(libs.com.google.dagger.hilt.android)
+    kapt(libs.com.google.dagger.hilt.android.compiler)
+    //    hilt Navigation Compose
+    implementation(libs.androidx.hilt.hilt.navigation.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

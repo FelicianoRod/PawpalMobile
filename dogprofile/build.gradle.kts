@@ -58,13 +58,7 @@ android {
 dependencies {
 
     implementation(project(":core"))
-
-    implementation(libs.io.coil.kt.coil)
-    implementation(libs.androidx.compose.material.icons.extended)
-
-    // Navegación
-    implementation(libs.androidx.navigation.compose)
-
+    implementation(project(":userprofile"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -74,10 +68,15 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(project(":userprofile"))
-//    Setialization
-    implementation(libs.org.jetbrains.kotlinx.serialization.json)
 
+    // Navegación
+    implementation(libs.androidx.navigation.compose)
+    // Coil (Imagenes)
+    implementation(libs.io.coil.kt.coil)
+    //    Icons (Biblioteca de iconos)
+    implementation(libs.androidx.compose.material.icons.extended)
+    //    Setialization
+    implementation(libs.org.jetbrains.kotlinx.serialization.json)
     //   Supabase
     implementation(platform(libs.io.github.jan.tennert.supabase.bom))
     implementation(libs.io.github.jan.tennert.supabase.postgrest.kt)
@@ -87,7 +86,7 @@ dependencies {
     //    Dagger Hilt
     implementation(libs.com.google.dagger.hilt.android)
     kapt(libs.com.google.dagger.hilt.android.compiler)
-//    hilt Navigation Compose
+    //    hilt Navigation Compose
     implementation(libs.androidx.hilt.hilt.navigation.compose)
 
     testImplementation(libs.junit)
