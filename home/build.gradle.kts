@@ -2,6 +2,12 @@ plugins {
 //    alias(libs.plugins.android.application)
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+//    Setialization
+    alias(libs.plugins.serialization)
+    //    Dagger Hilt
+    id("kotlin-kapt")
+//    id("kapt")
+    alias(libs.plugins.com.google.dagger.hilt.android)
 }
 
 android {
@@ -54,12 +60,6 @@ dependencies {
 
     implementation(project(":core"))
 
-    // Iconos
-    implementation(libs.androidx.compose.material.icons.extended)
-
-    // Navegación
-    implementation(libs.androidx.navigation.compose)
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -68,6 +68,27 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+
+    //    Serialization
+    implementation(libs.org.jetbrains.kotlinx.serialization.json)
+    // Iconos
+    implementation(libs.androidx.compose.material.icons.extended)
+    // Navegación
+    implementation(libs.androidx.navigation.compose)
+    //    Dagger Hilt
+    implementation(libs.com.google.dagger.hilt.android)
+    kapt(libs.com.google.dagger.hilt.android.compiler)
+    //    hilt Navigation Compose
+    implementation(libs.androidx.hilt.hilt.navigation.compose)
+    //   Supabase
+    implementation(platform(libs.io.github.jan.tennert.supabase.bom))
+    implementation(libs.io.github.jan.tennert.supabase.postgrest.kt)
+    implementation(libs.io.github.jan.tennert.supabase.gotrue.kt)
+    implementation(libs.io.github.jan.tennert.supabase.realtime.kt)
+    implementation(libs.io.github.jan.tennert.supabase.storage.kt)
+    // Coil (Imagenes)
+    implementation(libs.io.coil.kt.coil)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
