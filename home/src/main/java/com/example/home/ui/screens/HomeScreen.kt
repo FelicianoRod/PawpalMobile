@@ -15,21 +15,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.List
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -54,13 +47,36 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.SubcomposeAsyncImage
 import com.example.core.ui.components.DrawerContent
 import com.example.core.ui.components.TopAppBarPrimary
+import com.example.core.ui.repository.StateRepository
+import com.example.home.data.repository.HomeRepositoryImpl
+import com.example.home.data.repository.WeightRepositoryImpl
 import com.example.home.domain.model.Dog
+import com.example.home.domain.model.Weight
 import com.example.home.ui.viewmodel.HomeViewModel
-import kotlinx.coroutines.launch
+import com.example.home.ui.viewmodel.WeightViewModel
+import com.github.tehras.charts.bar.BarChart
+import com.github.tehras.charts.bar.BarChartData
+import com.github.tehras.charts.bar.renderer.xaxis.SimpleXAxisDrawer
+import com.github.tehras.charts.bar.renderer.yaxis.SimpleYAxisDrawer
+import com.github.tehras.charts.line.LineChart
+import com.github.tehras.charts.line.LineChartData
+import com.github.tehras.charts.line.renderer.line.SolidLineDrawer
+import com.github.tehras.charts.line.renderer.point.FilledCircularPointDrawer
+import com.github.tehras.charts.piechart.animation.simpleChartAnimation
+
+@Composable
+@Preview
+fun HomeScreenPreview() {
+    HomeScreen(navController = rememberNavController(), viewModel = HomeViewModel(HomeRepositoryImpl(), StateRepository()), weightViewModel = WeightViewModel(WeightRepositoryImpl()))
+}
 
 //@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltViewModel()) {
+fun HomeScreen(
+    navController: NavController,
+    viewModel: HomeViewModel = hiltViewModel(),
+    weightViewModel: WeightViewModel = hiltViewModel()
+) {
 
     LaunchedEffect(Unit) {
         viewModel.getDogs()
@@ -72,6 +88,9 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
     val dogs by viewModel.dogs.collectAsState()
     var selectedDog by remember { mutableStateOf<Dog?>(null) }
 
+    val weightHistory by weightViewModel.weightHistory.collectAsState()
+    val isLoadingWeightHistory by weightViewModel.isLoading.collectAsState()
+
     val pets = listOf("Jack", "Oddy", "Spike", "Moon", "Bella", "Max")
     var selectedPet by remember { mutableStateOf<String?>(null) }
 
@@ -82,9 +101,10 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
                 DrawerContent(navController)
             }
         },
-    ){
+    ) {
         Scaffold(
-            topBar = { TopAppBarPrimary("Hola, NombreDeUsuario", drawerState, scope)
+            topBar = {
+                TopAppBarPrimary("Hola, NombreDeUsuario", drawerState, scope)
 //                TopAppBar(
 //                    colors = topAppBarColors(
 //                        containerColor = Color(0xFFC8E0B4),
@@ -110,50 +130,83 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel = hiltView
 //                )
             }
         ) { innerPadding ->
-        Column(
-            modifier = Modifier
-                .padding(innerPadding),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-        ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
+                    .padding(innerPadding),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
-                Text(text = "Tus mascotas", style = MaterialTheme.typography.titleLarge)
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                LazyRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
                 ) {
-                    items(dogs?: emptyList()) { dog ->
-                        PetItem(
-                            dog = dog,
-                            isSelected = dog == selectedDog,
-                            onClick = { selectedDog = dog }
-                        )
+                    Text(text = "Tus mascotas", style = MaterialTheme.typography.titleLarge)
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    LazyRow(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        items(dogs ?: emptyList()) { dog ->
+                            PetItem(
+                                dog = dog,
+                                isSelected = dog == selectedDog,
+                                onClick = { selectedDog = dog
+                                    weightViewModel.getWeightHistory(dog.id)
+                                }
+                            )
+                        }
                     }
+
+//                    Spacer(modifier = Modifier.height(16.dp))
+//
+//                    Text(text = "Adopta una mascota", style = MaterialTheme.typography.titleLarge)
+//
+//                    Spacer(modifier = Modifier.height(16.dp))
+//
+//                    Card {
+//                        WeightChart(weightHistory)
+//                    }
+
                 }
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(text = "Adopta una mascota", style = MaterialTheme.typography.titleLarge)
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Card() {
-
-                }
-
-            }
 
 //            Text(
 //                modifier = Modifier.padding(8.dp),
 //                text = """Organización: Dividen tu código en componentes lógicos más pequeños y manejables. En lugar de tener todo el código en un solo módulo gigante, puedes separarlo por funcionalidades (ej: :feature:home, :feature:profile), capas de arquitectura (ej: :data, :domain, :ui) o cualquier otra estructura que se adapte a tu proyecto.""".trimIndent(),
 //            )
-        }
+            if (weightHistory == null) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(text = "No se tiene registros de peso")
+                    }
+
+                }
+            } else {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.padding(16.dp)
+                    ) {
+                        WeightChart(weightHistory ?: emptyList())
+                    }
+                }
+
+            }
+            }
 
         }
     }
@@ -285,4 +338,57 @@ fun PetItem(dog: Dog, isSelected: Boolean, onClick: () -> Unit) {
 
         Text(text = dog.name, fontSize = 14.sp)
     }
+}
+
+@Composable
+fun WeightChart(weightHistory: List<Weight>) {
+
+//    val bars = weightHistory.map { weight ->
+//        BarChartData.Bar(
+//            label = weight.created_at,
+//            value = weight.weight.toFloat(),
+//            color = MaterialTheme.colorScheme.primary
+//        )
+//    }
+//
+//    BarChart(
+//        barChartData = BarChartData(bars = bars),
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .height(200.dp)
+//            .padding(16.dp)
+//    )
+
+    Text(text = "Peso actual:")
+    Spacer(modifier = Modifier.height(8.dp))
+
+    // Convertir `weightHistory` en una lista de puntos para el gráfico
+    val points = weightHistory.map { weight ->
+        LineChartData.Point(weight.weight.toFloat(),  weight.created_at)
+    }
+
+    val line = SolidLineDrawer(
+        color = MaterialTheme.colorScheme.primary
+    )
+
+    // Crear el gráfico de líneas
+    LineChart(
+        linesChartData = listOf(LineChartData(points = points, lineDrawer = line)),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .padding(16.dp),
+        animation = simpleChartAnimation(),
+        pointDrawer = FilledCircularPointDrawer(color = MaterialTheme.colorScheme.secondary),
+//        lineDrawer = SolidLineDrawer(),
+//        xAxisDrawer = SimpleXAxisDrawer(),
+//        yAxisDrawer = SimpleYAxisDrawer(),
+        horizontalOffset = 5f,
+        labels = weightHistory.map { it.created_at } // Etiquetas para el eje X
+    )
+
+    Spacer(modifier = Modifier.height(8.dp))
+
+    Text(text = "Gráfico de peso en los últimos meses")
+
 }
