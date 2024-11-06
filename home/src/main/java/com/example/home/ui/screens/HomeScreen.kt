@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DrawerValue
@@ -48,11 +50,17 @@ import coil.compose.SubcomposeAsyncImage
 import com.example.core.ui.components.DrawerContent
 import com.example.core.ui.components.TopAppBarPrimary
 import com.example.core.ui.repository.StateRepository
+import com.example.core.utils.getDistance
 import com.example.home.data.repository.HomeRepositoryImpl
 import com.example.home.data.repository.WeightRepositoryImpl
 import com.example.home.domain.model.Dog
+import com.example.home.domain.model.Nutrition
+import com.example.home.domain.model.Walk
 import com.example.home.domain.model.Weight
+import com.example.home.domain.repository.WalkRepository
 import com.example.home.ui.viewmodel.HomeViewModel
+import com.example.home.ui.viewmodel.NutritionViewModel
+import com.example.home.ui.viewmodel.WalkViewModel
 import com.example.home.ui.viewmodel.WeightViewModel
 import com.github.tehras.charts.bar.BarChart
 import com.github.tehras.charts.bar.BarChartData
@@ -67,7 +75,11 @@ import com.github.tehras.charts.piechart.animation.simpleChartAnimation
 @Composable
 @Preview
 fun HomeScreenPreview() {
-    HomeScreen(navController = rememberNavController(), viewModel = HomeViewModel(HomeRepositoryImpl(), StateRepository()), weightViewModel = WeightViewModel(WeightRepositoryImpl()))
+    HomeScreen(
+        navController = rememberNavController(),
+        viewModel = HomeViewModel(HomeRepositoryImpl(), StateRepository()),
+        weightViewModel = WeightViewModel(WeightRepositoryImpl())
+    )
 }
 
 //@OptIn(ExperimentalMaterial3Api::class)
@@ -75,7 +87,9 @@ fun HomeScreenPreview() {
 fun HomeScreen(
     navController: NavController,
     viewModel: HomeViewModel = hiltViewModel(),
-    weightViewModel: WeightViewModel = hiltViewModel()
+    weightViewModel: WeightViewModel = hiltViewModel(),
+    walkViewModel: WalkViewModel = hiltViewModel(),
+    nutritionViewModel: NutritionViewModel = hiltViewModel()
 ) {
 
     LaunchedEffect(Unit) {
@@ -90,6 +104,12 @@ fun HomeScreen(
 
     val weightHistory by weightViewModel.weightHistory.collectAsState()
     val isLoadingWeightHistory by weightViewModel.isLoading.collectAsState()
+
+    val walks by walkViewModel.walks.collectAsState()
+    val isLoadingWalks by walkViewModel.isLoading.collectAsState()
+
+    val nutritionHistory by nutritionViewModel.nutritionHistory.collectAsState()
+    val isLoadingNutritionHistory by nutritionViewModel.isLoading.collectAsState()
 
     val pets = listOf("Jack", "Oddy", "Spike", "Moon", "Bella", "Max")
     var selectedPet by remember { mutableStateOf<String?>(null) }
@@ -132,8 +152,10 @@ fun HomeScreen(
         ) { innerPadding ->
             Column(
                 modifier = Modifier
-                    .padding(innerPadding),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
+                    .padding(innerPadding)
+                    .verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+
             ) {
                 Column(
                     modifier = Modifier
@@ -152,8 +174,12 @@ fun HomeScreen(
                             PetItem(
                                 dog = dog,
                                 isSelected = dog == selectedDog,
-                                onClick = { selectedDog = dog
+                                onClick = {
+                                    selectedDog = dog
                                     weightViewModel.getWeightHistory(dog.id)
+                                    walkViewModel.getWalks(dog.id)
+                                    nutritionViewModel.getNutritionHistory(dog.id)
+
                                 }
                             )
                         }
@@ -175,37 +201,40 @@ fun HomeScreen(
 //                modifier = Modifier.padding(8.dp),
 //                text = """Organización: Dividen tu código en componentes lógicos más pequeños y manejables. En lugar de tener todo el código en un solo módulo gigante, puedes separarlo por funcionalidades (ej: :feature:home, :feature:profile), capas de arquitectura (ej: :data, :domain, :ui) o cualquier otra estructura que se adapte a tu proyecto.""".trimIndent(),
 //            )
-            if (weightHistory == null) {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    Column(
+                if (weightHistory == null) {
+                    Card(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
+                            .padding(16.dp)
                     ) {
-                        Text(text = "No se tiene registros de peso")
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Text(text = "No se tiene registros de peso")
+                        }
+
+                    }
+                } else {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            WeightChart(weightHistory ?: emptyList())
+                        }
                     }
 
                 }
-            } else {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.padding(16.dp)
-                    ) {
-                        WeightChart(weightHistory ?: emptyList())
-                    }
-                }
+                WalksChart(walks)
+                NutritionChart(nutritionHistory)
 
-            }
             }
 
         }
@@ -278,9 +307,142 @@ fun HomeScreen(
 }
 
 @Composable
-fun Walks() {
-    TODO("Not yet implemented")
+fun NutritionChart(nutritionHistory: List<Nutrition>?) {
+
+    if (nutritionHistory == null) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(text = "Elige una mascota para ver sus alimentación")
+            }
+
+        }
+    } else if (nutritionHistory.isEmpty()) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(text = "No se tiene registros de alimentación")
+            }
+
+        }
+    }
+    else {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                val bars = nutritionHistory.map { nutrition ->
+                    BarChartData.Bar(
+                        label = nutrition.created_at,
+                        value = nutrition.food_amount.toFloat(),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+
+                BarChart(
+                    barChartData = BarChartData(bars = bars),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .padding(16.dp)
+                )
+            }
+        }
+
+    }
 }
+
+@Composable
+fun WalksChart(walks: List<Walk>?) {
+
+    if (walks == null) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(text = "Elige una mascota para ver sus paseos")
+            }
+
+        }
+    } else if (walks.isEmpty()) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(text = "No se tiene registros de paseos")
+            }
+
+        }
+    }
+    else {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                val bars = walks.map { walk ->
+                    BarChartData.Bar(
+                        label = walk.day,
+                        value = getDistance(walk.distance),
+                        color = MaterialTheme.colorScheme.primary
+                    )
+                }
+
+                BarChart(
+                    barChartData = BarChartData(bars = bars),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .padding(16.dp)
+                )
+            }
+        }
+
+    }
+
+}
+
 
 @Preview(showBackground = true)
 @Composable
@@ -343,28 +505,14 @@ fun PetItem(dog: Dog, isSelected: Boolean, onClick: () -> Unit) {
 @Composable
 fun WeightChart(weightHistory: List<Weight>) {
 
-//    val bars = weightHistory.map { weight ->
-//        BarChartData.Bar(
-//            label = weight.created_at,
-//            value = weight.weight.toFloat(),
-//            color = MaterialTheme.colorScheme.primary
-//        )
-//    }
-//
-//    BarChart(
-//        barChartData = BarChartData(bars = bars),
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .height(200.dp)
-//            .padding(16.dp)
-//    )
+
 
     Text(text = "Peso actual:")
     Spacer(modifier = Modifier.height(8.dp))
 
     // Convertir `weightHistory` en una lista de puntos para el gráfico
     val points = weightHistory.map { weight ->
-        LineChartData.Point(weight.weight.toFloat(),  weight.created_at)
+        LineChartData.Point(weight.weight.toFloat(), weight.created_at)
     }
 
     val line = SolidLineDrawer(
