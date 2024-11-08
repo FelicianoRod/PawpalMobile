@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Output
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Pets
@@ -50,6 +51,24 @@ fun DrawerContent(navController: NavController) {
             modifier = Modifier.align(Alignment.TopStart)
         ) {
             Spacer(modifier = Modifier.height(16.dp))
+            Text(text = "Inicio", modifier = Modifier.padding(start = 16.dp))
+            DrawerItem(
+                icon = Icons.Default.Home,
+                label = "Inicio",
+                notificationCount = 0,
+                selected = currentRoute == "home",
+                modifier = Modifier.clickable {
+                    navController.navigate("home")
+                }
+            )
+//            Spacer(modifier = Modifier.height(16.dp))
+
+            Divider(
+                color = Color.Gray,
+                thickness = 1.dp,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
+            Spacer(modifier = Modifier.height(32.dp))
             Text(text = "Perfil", modifier = Modifier.padding(start = 16.dp))
             Spacer(modifier = Modifier.height(16.dp))
             Column() {

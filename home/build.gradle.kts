@@ -88,6 +88,8 @@ dependencies {
     implementation(libs.io.github.jan.tennert.supabase.storage.kt)
     // Coil (Imagenes)
     implementation(libs.io.coil.kt.coil)
+    //  Compose charts
+    implementation(libs.com.github.tehras.charts)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -28,6 +28,8 @@ hiltNavigationComposeVersion = "1.2.0"
 #plugins
 serialization = "2.0.20"
 runtimeLivedata = "1.7.3"
+# Charts
+chartsVersion = "0.2.4-alpha"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -75,7 +77,8 @@ com-google-dagger-hilt-android = { group = "com.google.dagger", name = "hilt-and
 androidx-hilt-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigationComposeVersion"}
 #Kapt
 com-google-dagger-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "daggerHiltVersion"}
-
+# Charts
+com-github-tehras-charts = { group = "com.github.tehras", name = "charts", version.ref = "chartsVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
