@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Balance
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Output
 import androidx.compose.material.icons.filled.Person
@@ -68,6 +69,25 @@ fun DrawerContent(navController: NavController) {
                 thickness = 1.dp,
                 modifier = Modifier.padding(horizontal = 16.dp),
             )
+
+            Spacer(modifier = Modifier.height(32.dp))
+            Text(text = "Monitoreo", modifier = Modifier.padding(start = 16.dp))
+            DrawerItem(
+                icon = Icons.Default.Balance,
+                label = "Peso de la mascota",
+                notificationCount = 0,
+                selected = currentRoute == "weight_screen",
+                modifier = Modifier.clickable {
+                    navController.navigate("weight_screen")
+                }
+            )
+
+            Divider(
+                color = Color.Gray,
+                thickness = 1.dp,
+                modifier = Modifier.padding(horizontal = 16.dp),
+            )
+
             Spacer(modifier = Modifier.height(32.dp))
             Text(text = "Perfil", modifier = Modifier.padding(start = 16.dp))
             Spacer(modifier = Modifier.height(16.dp))

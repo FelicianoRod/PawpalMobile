@@ -87,6 +87,8 @@ dependencies {
     kapt(libs.com.google.dagger.hilt.android.compiler)
     //    hilt Navigation Compose
     implementation(libs.androidx.hilt.hilt.navigation.compose)
+    //  Compose charts
+    implementation(libs.com.github.tehras.charts)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

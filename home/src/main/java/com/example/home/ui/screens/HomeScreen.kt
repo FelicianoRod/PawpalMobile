@@ -51,6 +51,7 @@ import com.example.core.data.supabase
 import com.example.core.ui.components.DrawerContent
 import com.example.core.ui.components.TopAppBarPrimary
 import com.example.core.ui.repository.StateRepository
+import com.example.core.ui.viewmodel.SelectedDogViewModel
 import com.example.core.utils.dayMonth
 import com.example.core.utils.getDistance
 import com.example.home.data.repository.HomeRepositoryImpl
@@ -91,7 +92,8 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     weightViewModel: WeightViewModel = hiltViewModel(),
     walkViewModel: WalkViewModel = hiltViewModel(),
-    nutritionViewModel: NutritionViewModel = hiltViewModel()
+    nutritionViewModel: NutritionViewModel = hiltViewModel(),
+    selectedDogViewModel: SelectedDogViewModel = hiltViewModel()
 ) {
 
     LaunchedEffect(Unit) {
@@ -154,7 +156,7 @@ fun HomeScreen(
                                     weightViewModel.getWeightHistory(dog.id)
                                     walkViewModel.getWalks(dog.id)
                                     nutritionViewModel.getNutritionHistory(dog.id)
-
+                                    selectedDogViewModel.selectDog(dog.id)
                                 }
                             )
                         }
