@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class WeightRepositoryImpll @Inject constructor() : WeightRepositoryy {
 
-    override suspend fun getWeight(id: Int) : Flow<List<Weight>> = flow {
+    override suspend fun getWeight(id: Int, startDate: String, endDate: String) : Flow<List<Weight>> = flow {
         try {
             val columns = Columns.raw("""
                 id,

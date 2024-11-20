@@ -76,18 +76,24 @@ fun WeightScreen(
     selectedDogViewModel: SelectedDogViewModel = hiltViewModel()
 ) {
 
-    LaunchedEffect(Unit) {
-        weightViewModel.getWeightHistory(selectedDogViewModel.selectedDog.value ?: 0)
-    }
+//    LaunchedEffect(Unit) {
+//        weightViewModel.getWeightHistory(selectedDogViewModel.selectedDog.value ?: 0)
+//    }
 
-    val drawerState = drawerViewModel.drawerState.value
+    val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
     val weightHistory by weightViewModel.weightHistory.collectAsState()
     val isLoadingWeightHistory by weightViewModel.isLoading.collectAsState()
 
+    val selectedDog by selectedDogViewModel.selectedDog.collectAsState()
+
+    val startDate by weightViewModel.startDate.collectAsState()
+    val endDate by weightViewModel.endDate.collectAsState()
+    val selectedDates by weightViewModel.selectedDates.collectAsState()
+
     ModalNavigationDrawer(
-        drawerState = rememberDrawerState(initialValue = drawerState),
+        drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
         drawerContent = {
             ModalDrawerSheet {
                 DrawerContent(navController)
@@ -96,23 +102,35 @@ fun WeightScreen(
     ) {
         Scaffold(
             topBar = {
-                TopAppBarPrimary("Inicio", DrawerState(drawerViewModel.drawerState.value), scope)
+                TopAppBarPrimary("Peso de la mascota", drawerState, scope)
             }
         ) { innerPadding ->
             Column(
                 modifier = Modifier
                     .padding(innerPadding)
                     .verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+//                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                WeightChart(weightHistory)
+                BetweenDates(
+                    startDateChanged = { weightViewModel.onStartDateChanged(it) },
+                    endDateChanged = { weightViewModel.onEndDateChanged(it) }
+                )
+                WeightChart(weightHistory, selectedDog)
+                CustomButtom(
+                    onClick = {
+                        weightViewModel.getWeightHistory(selectedDog ?: 0, startDate, endDate)
+                    },
+                    selectedDog = selectedDog,
+                    selectedDates = selectedDates
+
+                )
             }
         }
     }
 }
 
 @Composable
-fun WeightChart(weightHistory: List<Weight>?) {
+fun WeightChart(weightHistory: List<Weight>?, selectedDog: Int?) {
 
     val timestamptzFormatter = TimestamptzFormatter()
 
@@ -142,10 +160,17 @@ fun WeightChart(weightHistory: List<Weight>?) {
             verticalArrangement = Arrangement.Center
         ) {
 
+            if (selectedDog == null) {
+                Text(
+                    text = "Elige una mascota para ver el historial de su peso",
+                    style = MaterialTheme.typography.labelMedium
+                )
+            }
+
             if (weightHistory == null) {
 
                 Text(
-                    text = "Elige una mascota para ver el historial de su peso",
+                    text = "Selecciona las fechas",
                     style = MaterialTheme.typography.labelMedium
                 )
 
@@ -172,7 +197,7 @@ fun WeightChart(weightHistory: List<Weight>?) {
                 )
 
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(16.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
@@ -184,8 +209,8 @@ fun WeightChart(weightHistory: List<Weight>?) {
                         linesChartData = listOf(LineChartData(points = points, lineDrawer = line)),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(200.dp)
-                            .padding(start = 0.dp, end = 16.dp,top = 8.dp, bottom = 8.dp),
+                            .height(200.dp),
+//                            .padding(start = 0.dp, end = 16.dp, top = 8.dp, bottom = 8.dp),
                         animation = simpleChartAnimation(),
                         pointDrawer = FilledCircularPointDrawer(color = MaterialTheme.colorScheme.secondary),
 //                        horizontalOffset = -2f,
@@ -210,13 +235,19 @@ fun WeightChart(weightHistory: List<Weight>?) {
 @Preview(showBackground = true)
 @Composable
 fun BetweenDatesPreview() {
-    BetweenDates()
+    BetweenDates(
+        startDateChanged = {},
+        endDateChanged = {}
+    )
 }
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BetweenDates() {
+fun BetweenDates(
+    startDateChanged: (String) -> Unit,
+    endDateChanged: (String) -> Unit
+) {
 
     var startDate = remember { mutableStateOf("") }
     var endDate = remember { mutableStateOf("") }
@@ -246,13 +277,16 @@ fun BetweenDates() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 0.dp),
 //        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         OutlinedTextField(
             value = startDate.value,
-            onValueChange = {},
+            onValueChange = {
+                startDate.value = it
+                startDateChanged(it)
+            },
             label = { Text("Fecha inicio") },
             readOnly = true,
             modifier = Modifier.weight(1f),
@@ -272,7 +306,10 @@ fun BetweenDates() {
         Spacer(modifier = Modifier.width(16.dp))
         OutlinedTextField(
             value = endDate.value,
-            onValueChange = {},
+            onValueChange = {
+                endDate.value = it
+                endDateChanged(it)
+            },
             label = { Text("Fecha final") },
             readOnly = true,
             modifier = Modifier.weight(1f),
@@ -355,5 +392,26 @@ fun BetweenDates() {
     dateTwo?.let {
         val localDate = Instant.ofEpochMilli(it).atZone(ZoneId.of("UTC")).toLocalDate()
         endDate.value =  "${localDate.dayOfMonth}-${localDate.monthValue}-${localDate.year}"
+    }
+}
+
+@Composable
+fun CustomButtom(
+    onClick: () -> Unit,
+    selectedDog: Int?,
+    selectedDates: Boolean
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+
+        Button(
+            onClick =  onClick,
+            enabled = selectedDog != null
+        ) {
+            Text("Ver historial")
+        }
     }
 }
