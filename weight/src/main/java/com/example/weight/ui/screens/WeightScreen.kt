@@ -249,8 +249,11 @@ fun BetweenDates(
     endDateChanged: (String) -> Unit
 ) {
 
-    var startDate = remember { mutableStateOf("") }
-    var endDate = remember { mutableStateOf("") }
+    val startDate = remember { mutableStateOf("") }
+    val endDate = remember { mutableStateOf("") }
+
+    var showDialog by remember { mutableStateOf(false) }
+    var showDialogFinal by remember { mutableStateOf(false) }
 
     val textFieldOneState = rememberDatePickerState(
         initialSelectedDateMillis = System.currentTimeMillis(),
@@ -270,9 +273,6 @@ fun BetweenDates(
         },
         yearRange = 2000..2024
     )
-
-    var showDialog by remember { mutableStateOf(false) }
-    var showDialogFinal by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
@@ -387,6 +387,7 @@ fun BetweenDates(
     dateOne?.let {
         val localDate = Instant.ofEpochMilli(it).atZone(ZoneId.of("UTC")).toLocalDate()
         startDate.value =  "${localDate.dayOfMonth}-${localDate.monthValue}-${localDate.year}"
+        startDateChanged(startDate.value)
     }
 
     dateTwo?.let {
@@ -409,7 +410,7 @@ fun CustomButtom(
 
         Button(
             onClick =  onClick,
-            enabled = selectedDog != null
+            enabled = selectedDog != null && selectedDates
         ) {
             Text("Ver historial")
         }

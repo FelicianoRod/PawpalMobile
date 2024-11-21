@@ -29,7 +29,7 @@ class WeightViewModel @Inject constructor(
     private val _endDate = MutableStateFlow("")
     val endDate: MutableStateFlow<String> = _endDate
 
-    private val _selectedDates = MutableStateFlow(true)
+    private val _selectedDates = MutableStateFlow(false)
     val selectedDates: MutableStateFlow<Boolean> = _selectedDates
 
 //    init {
@@ -41,7 +41,6 @@ class WeightViewModel @Inject constructor(
 //    }
 
     fun getWeightHistory(id: Int, startDate: String, endDate: String) {
-        Log.d("WeightViewModel", "getWeightHistory called with id:$id and startDate: $startDate and endDate $endDate: $id")
         viewModelScope.launch {
 
             _isLoading.value = true
@@ -56,6 +55,7 @@ class WeightViewModel @Inject constructor(
     }
 
     fun onStartDateChanged(startDate: String) {
+        Log.d("WeightViewModel", "onStartDateChanged: $startDate")
         _startDate.value = startDate
         onSelectedDatesChanged()
     }
@@ -66,6 +66,7 @@ class WeightViewModel @Inject constructor(
     }
 
     private fun onSelectedDatesChanged() {
+        Log.d("WeightViewModel", "onSelectedDatesChanged: ${_startDate.value} - ${_endDate.value}")
         if (_startDate.value.isNotEmpty() && _endDate.value.isNotEmpty()) {
             _selectedDates.value = true
         }
