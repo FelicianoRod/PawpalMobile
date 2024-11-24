@@ -115,7 +115,7 @@ fun WeightScreen(
                     startDateChanged = { weightViewModel.onStartDateChanged(it) },
                     endDateChanged = { weightViewModel.onEndDateChanged(it) }
                 )
-                WeightChart(weightHistory, selectedDog)
+                WeightChart(weightHistory, selectedDog, navController)
                 CustomButtom(
                     onClick = {
                         weightViewModel.getWeightHistory(selectedDog ?: 0, startDate, endDate)
@@ -130,7 +130,7 @@ fun WeightScreen(
 }
 
 @Composable
-fun WeightChart(weightHistory: List<Weight>?, selectedDog: Int?) {
+fun WeightChart(weightHistory: List<Weight>?, selectedDog: Int?, navController: NavController) {
 
     val timestamptzFormatter = TimestamptzFormatter()
 
@@ -162,17 +162,26 @@ fun WeightChart(weightHistory: List<Weight>?, selectedDog: Int?) {
 
             if (selectedDog == null) {
                 Text(
-                    text = "Elige una mascota para ver el historial de su peso",
+                    text = "Aun no has seleccionado una mascota",
                     style = MaterialTheme.typography.labelMedium
                 )
+                Button(
+                    onClick = {
+                        navController.navigate("home")
+                    },
+                ) {
+                    Text("Ir a home")
+                }
+
             }
 
             if (weightHistory == null) {
 
                 Text(
-                    text = "Selecciona las fechas",
+                    text = "...",
                     style = MaterialTheme.typography.labelMedium
                 )
+
 
             } else if (weightHistory.isEmpty()) {
 
@@ -283,10 +292,7 @@ fun BetweenDates(
     ) {
         OutlinedTextField(
             value = startDate.value,
-            onValueChange = {
-                startDate.value = it
-                startDateChanged(it)
-            },
+            onValueChange = {},
             label = { Text("Fecha inicio") },
             readOnly = true,
             modifier = Modifier.weight(1f),
@@ -306,10 +312,7 @@ fun BetweenDates(
         Spacer(modifier = Modifier.width(16.dp))
         OutlinedTextField(
             value = endDate.value,
-            onValueChange = {
-                endDate.value = it
-                endDateChanged(it)
-            },
+            onValueChange = {},
             label = { Text("Fecha final") },
             readOnly = true,
             modifier = Modifier.weight(1f),
@@ -387,12 +390,13 @@ fun BetweenDates(
     dateOne?.let {
         val localDate = Instant.ofEpochMilli(it).atZone(ZoneId.of("UTC")).toLocalDate()
         startDate.value =  "${localDate.dayOfMonth}-${localDate.monthValue}-${localDate.year}"
-        startDateChanged(startDate.value)
+        startDateChanged("${localDate.year}-${localDate.monthValue}-${localDate.dayOfMonth}")
     }
 
     dateTwo?.let {
         val localDate = Instant.ofEpochMilli(it).atZone(ZoneId.of("UTC")).toLocalDate()
         endDate.value =  "${localDate.dayOfMonth}-${localDate.monthValue}-${localDate.year}"
+        endDateChanged("${localDate.year}-${localDate.monthValue}-${localDate.dayOfMonth}")
     }
 }
 

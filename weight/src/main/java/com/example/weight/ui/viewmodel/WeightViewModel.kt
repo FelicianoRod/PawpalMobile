@@ -55,7 +55,6 @@ class WeightViewModel @Inject constructor(
     }
 
     fun onStartDateChanged(startDate: String) {
-        Log.d("WeightViewModel", "onStartDateChanged: $startDate")
         _startDate.value = startDate
         onSelectedDatesChanged()
     }
@@ -66,7 +65,6 @@ class WeightViewModel @Inject constructor(
     }
 
     private fun onSelectedDatesChanged() {
-        Log.d("WeightViewModel", "onSelectedDatesChanged: ${_startDate.value} - ${_endDate.value}")
         if (_startDate.value.isNotEmpty() && _endDate.value.isNotEmpty()) {
             _selectedDates.value = true
         }
