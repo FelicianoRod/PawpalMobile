@@ -46,6 +46,5 @@ class WeightRepositoryImpll @Inject constructor() : WeightRepositoryy {
         } catch (e: Exception) {
             null
         }
-// test
     }
 }
