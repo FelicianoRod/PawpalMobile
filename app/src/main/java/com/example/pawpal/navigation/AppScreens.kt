@@ -24,4 +24,7 @@ sealed class AppScreens(val route: String) {
 
     }
 
+    // Weight
+    object WeightScreen: AppScreens("weight_screen")
+
 }

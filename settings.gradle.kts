@@ -30,3 +30,4 @@ include(":dogprofile")
 
 // Realizando cambios
 include(":core")
+include(":weight")

@@ -15,6 +15,7 @@
             <option value="$PROJECT_DIR$/dogprofile" />
             <option value="$PROJECT_DIR$/home" />
             <option value="$PROJECT_DIR$/userprofile" />
+            <option value="$PROJECT_DIR$/weight" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />
