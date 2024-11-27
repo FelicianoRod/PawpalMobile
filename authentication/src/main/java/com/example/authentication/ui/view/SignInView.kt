@@ -28,8 +28,12 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.withStyle
 import com.example.authentication.R
 import com.example.core.ui.components.TextFieldForm
 
@@ -96,6 +100,19 @@ fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
                     LoginButton(viewModel, buttonEnabled, navController)
                     Spacer(modifier = Modifier.height(16.dp))
 //                    SignUpButton(navController)
+                    Text(
+                        buildAnnotatedString {
+                            append("¿Olvidaste tu contraseña? ")
+                            withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                                append("pulsa aquí")
+                            }
+                        },
+                        modifier = Modifier.clickable(onClick = {
+                            navController.navigate("recovery_password")
+                        }),
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+
                 }
             }
         }

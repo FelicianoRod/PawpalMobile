@@ -11,6 +11,7 @@ import androidx.navigation.navArgument
 import com.example.authentication.data.repository.AuthRepositoryImpl
 import com.example.authentication.domain.repository.SignUpViewModelFactory
 import com.example.authentication.ui.view.LoginScreen
+import com.example.authentication.ui.view.RecoveryPasswordScreen
 import com.example.authentication.ui.view.SignUpScreen
 import com.example.authentication.ui.viewmodel.LoginViewModel
 import com.example.authentication.ui.viewmodel.SignUpViewModel
@@ -71,6 +72,9 @@ fun AppNavigation(themeStateViewModel: ThemeStateViewModel) {
                     factory = SignUpViewModelFactory(AuthRepositoryImpl())
                 )
                 SignUpScreen(signUpViewModel, navController)
+            }
+            composable(route = AppScreens.RecoveryPasswordScreen.route) {
+                RecoveryPasswordScreen()
             }
 
             // Home

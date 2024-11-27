@@ -1,15 +1,15 @@
 import java.io.FileInputStream
 import java.util.Properties
 
-// Leer propiedades del archivo local
 val properties = Properties().apply {
     load(FileInputStream(rootProject.file("local.properties")))
 }
 
 plugins {
-//    alias(libs.plugins.android.application)
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("kotlin-kapt")
+    alias(libs.plugins.com.google.dagger.hilt.android)
 }
 
 android {
@@ -19,7 +19,6 @@ android {
     val supabaseKey: String = properties.getProperty("supabaseKey")
     val supabaseUrl: String = properties.getProperty("supabaseUrl")
 
-    // Habilitar la generación de BuildConfig
     buildFeatures {
         buildConfig = true
     }
@@ -68,46 +67,11 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-
 }
 
 dependencies {
 
-    implementation(libs.androidx.navigation.compose)
-//    val ktorClientAndroidVersion: String = properties.getProperty("ktorClientAndroidVersion")
-//    val lifecycleViewmodelVersion: String = properties.getProperty("lifecycleViewmodelVersion")
-//    val gotruektVersion: String = properties.getProperty("gotrue-ktVersion")
-
-
-//    implementation(platform("io.github.jan-tennert.supabase:bom:2.5.3"))
-//    implementation("io.github.jan-tennert.supabase:postgrest-kt")
-//    implementation("io.github.jan-tennert.supabase:realtime-kt")
-
-
-//    implementation("io.github.jan-tennert.supabase:gotrue-kt:$gotrueVersion")
-
-//    implementation("io.ktor:ktor-client-android:$ktorClientAndroidVersion")
-//    implementation(libs.io.github.jan.tennet.supabase.gotrue.kt)
-//    implementation(libs.io.ktor.client.cio)
-//    implementation(libs.androidx.lifecycle.viewmodel.compose)
-//    implementation("io.github.jan-tennert.supabase:gotrue-kt:2.5.3")
-//    implementation("io.ktor:ktor-client-cio:2.3.12")
-//    implementation("androidx.lifecycle:lifecycle-viewmodel:2.8.4")
-
     implementation(project(":core"))
-
-
-//  Ktor
-    implementation(libs.io.ktor.client.android)
-
-//    Securiry State
-//    implementation(libs.androidx.security.state)
-
-    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
-    implementation ("androidx.compose.runtime:runtime-livedata:1.2.1")
-
-    implementation("androidx.webkit:webkit:1.11.0")
-    implementation("androidx.compose.ui:ui-viewbinding")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -122,7 +86,22 @@ dependencies {
     implementation(libs.io.github.jan.tennert.supabase.postgrest.kt)
     implementation(libs.io.github.jan.tennert.supabase.gotrue.kt)
     implementation(libs.io.github.jan.tennert.supabase.realtime.kt)
+
     implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.io.ktor.client.android)
+
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.5.1")
+    implementation ("androidx.compose.runtime:runtime-livedata:1.2.1")
+
+    implementation("androidx.webkit:webkit:1.11.0")
+    implementation("androidx.compose.ui:ui-viewbinding")
+
+    //    Dagger Hilt
+    implementation(libs.com.google.dagger.hilt.android)
+    kapt(libs.com.google.dagger.hilt.android.compiler)
+    //    hilt Navigation Compose
+    implementation(libs.androidx.hilt.hilt.navigation.compose)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

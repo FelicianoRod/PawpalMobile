@@ -9,6 +9,7 @@ sealed class AppScreens(val route: String) {
     object SignUpScreen: AppScreens("sign_up")
     object HomeScreen: AppScreens("home")
     object UserProfileScreen: AppScreens("user_profile")
+    object RecoveryPasswordScreen: AppScreens("recovery_password")
 
 //    User Profile
     object ProfileScreen: AppScreens("profile_screen")
