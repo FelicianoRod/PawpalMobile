@@ -27,7 +27,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import com.example.authentication.R
@@ -102,6 +108,7 @@ fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
     }
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginButton(viewModel: LoginViewModel, loginEnable: Boolean, navController: NavController) {
     Button(
@@ -110,7 +117,11 @@ fun LoginButton(viewModel: LoginViewModel, loginEnable: Boolean, navController: 
         },
         modifier = Modifier
             .fillMaxWidth()
-            .height(48.dp),
+            .height(48.dp)
+            .semantics {
+                testTagsAsResourceId = true
+                testTag = "loginButton"
+                       },
         colors = ButtonColors(
             containerColor = MaterialTheme.colorScheme.primary,
             contentColor = Color.Black,
@@ -158,7 +169,7 @@ fun ForgotPassword(modifier: Modifier) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 fun PasswordField(password: String, onTextFieldChanged: (String) -> Unit) {
 
@@ -180,10 +191,15 @@ fun PasswordField(password: String, onTextFieldChanged: (String) -> Unit) {
             IconButton(onClick = { passwordVisible = !passwordVisible }) {
                 Icon(imageVector = image, contentDescription = null)
             }
+        },
+        modifier = Modifier.semantics {
+            testTagsAsResourceId = true
+            testTag = "passwordField"
         }
     )
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun EmailField(email: String, onTextFieldChanged: (String) -> Unit) {
     TextFieldForm(
@@ -192,5 +208,9 @@ fun EmailField(email: String, onTextFieldChanged: (String) -> Unit) {
         label = "Correo electrónico",
         placeholder = "fulanito@gmail.com",
         keyboardType = KeyboardType.Email,
+        modifier = Modifier.semantics {
+            testTagsAsResourceId = true
+            testTag = "emailField"
+        }
     )
 }
