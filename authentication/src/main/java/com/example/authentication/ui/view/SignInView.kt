@@ -45,6 +45,7 @@ fun LoginScreenPreview() {
     LoginScreen(viewModel = LoginViewModel(), navController = rememberNavController())
 }
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun LoginScreen(viewModel: LoginViewModel, navController: NavController) {
 
