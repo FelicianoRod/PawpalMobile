@@ -1,9 +1,9 @@
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material.TextField
-import androidx.compose.material.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.TextFieldValue
+import io.ktor.websocket.Frame
 
 @Composable
 fun MainTextField(
@@ -14,7 +14,7 @@ fun MainTextField(
     TextField(
         value = value,
         onValueChange = onValueChange,
-        label = { Text(label) },
+        label = { Frame.Text(label) },
         modifier = Modifier.fillMaxWidth()
     )
 }

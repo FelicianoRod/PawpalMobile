@@ -9,6 +9,8 @@ sealed class AppScreens(val route: String) {
     object SignUpScreen: AppScreens("sign_up")
     object HomeScreen: AppScreens("home")
     object UserProfileScreen: AppScreens("user_profile")
+    object RecoveryPasswordScreen: AppScreens("recovery_password")
+    object ResetPasswordScreen: AppScreens("reset_password")
 
 //    User Profile
     object ProfileScreen: AppScreens("profile_screen")
@@ -21,10 +23,12 @@ sealed class AppScreens(val route: String) {
     object AddDogScreen: AppScreens("add_dog")
     object DogInformationScreen: AppScreens("dog_information/{dogId}") {
         fun createRoute(dogId: Int) = "dog_information/$dogId"
-
     }
 
     // Weight
     object WeightScreen: AppScreens("weight_screen")
+
+    // Deep link
+//    object RecoveryPasswordScreenDeepLink: AppScreens("recoverypassword")
 
 }
