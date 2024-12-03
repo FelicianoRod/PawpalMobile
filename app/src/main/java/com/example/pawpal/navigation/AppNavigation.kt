@@ -1,6 +1,8 @@
 package com.example.pawpal.navigation
 
+import android.app.Activity
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.NavType.Companion.StringType
@@ -11,7 +13,9 @@ import androidx.navigation.navArgument
 import com.example.authentication.data.repository.AuthRepositoryImpl
 import com.example.authentication.domain.repository.SignUpViewModelFactory
 import com.example.authentication.ui.view.LoginScreen
+import com.example.authentication.ui.view.RecoveryPasswordPreview
 import com.example.authentication.ui.view.RecoveryPasswordScreen
+import com.example.authentication.ui.view.ResetPasswordScreen
 import com.example.authentication.ui.view.SignUpScreen
 import com.example.authentication.ui.viewmodel.LoginViewModel
 import com.example.authentication.ui.viewmodel.SignUpViewModel
@@ -75,6 +79,9 @@ fun AppNavigation(themeStateViewModel: ThemeStateViewModel) {
             }
             composable(route = AppScreens.RecoveryPasswordScreen.route) {
                 RecoveryPasswordScreen()
+            }
+            composable(route = AppScreens.ResetPasswordScreen.route) {
+                ResetPasswordScreen(navController)
             }
 
             // Home
@@ -144,6 +151,20 @@ fun AppNavigation(themeStateViewModel: ThemeStateViewModel) {
             composable(route = AppScreens.WeightScreen.route) {
                 WeightScreen(navController)
             }
+
+            // Deep link
+//            composable(
+//                route = AppScreens.RecoveryPasswordScreenDeepLink.route,
+//                arguments = listOf
+//            )
         }
+
+    val deepLinkIntent = (LocalContext.current as Activity).intent
+    deepLinkIntent.data?.let { uri ->
+        val path = uri.path
+        if (path == "/resetpassword") {
+            navController.navigate(AppScreens.ResetPasswordScreen.route)
+        }
+    }
 //    }
 }

@@ -31,7 +31,7 @@ fun RecoveryPasswordPreview() {
 fun RecoveryPasswordScreen(
     recoveryPasswordViewModel: RecoveryPasswordViewModel = hiltViewModel()
 ) {
-    val email by recoveryPasswordViewModel.email.collectAsState()
+    val emailState by recoveryPasswordViewModel.emailState.collectAsState()
 
     Column(
         modifier = Modifier.fillMaxSize()
@@ -50,7 +50,7 @@ fun RecoveryPasswordScreen(
         )
         Spacer(modifier = Modifier.height(32.dp))
         TextField(
-            value = email.email,
+            value = emailState.email,
             onValueChange = {
                 recoveryPasswordViewModel.onEmailChanged(it)
                 recoveryPasswordViewModel.isValidEmail(it)
@@ -58,11 +58,11 @@ fun RecoveryPasswordScreen(
             label = { Text("Email") },
             placeholder = { Text("email@merchypart.hk") },
             modifier = Modifier.fillMaxWidth(),
-            isError = email.isError,
+            isError = emailState.isError,
             supportingText = {
-                if (email.isError) {
+                if (emailState.isError) {
                     Text(
-                        text = email.errorList.joinToString(),
+                        text = emailState.errorList.joinToString(),
                         color = MaterialTheme.colorScheme.error
                     )
                 }
@@ -70,7 +70,9 @@ fun RecoveryPasswordScreen(
         )
         Spacer(modifier = Modifier.height(32.dp))
         Button(
-            onClick = {  },
+            onClick = {
+                recoveryPasswordViewModel.passwordResetRequest(emailState.email)
+            },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text("Recuperar contraseña")
