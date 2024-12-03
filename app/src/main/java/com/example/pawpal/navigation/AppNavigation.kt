@@ -37,6 +37,7 @@ import com.example.userprofile.ui.view.UserProfileScreen
 import com.example.userprofile.ui.viewmodel.ProfileStateViewModel
 import com.example.userprofile.ui.viewmodel.ThemeStateViewModel
 import com.example.userprofile.ui.viewmodel.UserProfileStateViewModel
+import com.example.weight.ui.screens.AlimentationScreen
 import com.example.weight.ui.screens.WeightScreen
 
 @Composable
@@ -148,8 +149,12 @@ fun AppNavigation(themeStateViewModel: ThemeStateViewModel) {
                 DogInformationScreen(navController, dogInformationViewModel)
             }
 
+            // Weight
             composable(route = AppScreens.WeightScreen.route) {
                 WeightScreen(navController)
+            }
+            composable(route = AppScreens.AlimentationScreen.route) {
+                AlimentationScreen(navController)
             }
 
             // Deep link

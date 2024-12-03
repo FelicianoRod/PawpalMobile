@@ -27,6 +27,7 @@ sealed class AppScreens(val route: String) {
 
     // Weight
     object WeightScreen: AppScreens("weight_screen")
+    object AlimentationScreen: AppScreens("alimentation_screen")
 
     // Deep link
 //    object RecoveryPasswordScreenDeepLink: AppScreens("recoverypassword")

@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Output
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Pets
+import androidx.compose.material.icons.filled.Restaurant
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -79,6 +80,15 @@ fun DrawerContent(navController: NavController) {
                 selected = currentRoute == "weight_screen",
                 modifier = Modifier.clickable {
                     navController.navigate("weight_screen")
+                }
+            )
+            DrawerItem(
+                icon = Icons.Default.Restaurant,
+                label = "Alimentación",
+                notificationCount = 0,
+                selected = currentRoute == "alimentation_screen",
+                modifier = Modifier.clickable {
+                    navController.navigate("alimentation_screen")
                 }
             )
 
