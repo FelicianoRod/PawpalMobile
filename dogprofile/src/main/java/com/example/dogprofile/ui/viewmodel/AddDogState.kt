@@ -1,7 +1,12 @@
 package com.example.dogprofile.ui.viewmodel
 
+import android.annotation.SuppressLint
+import android.app.Notification
+import android.app.NotificationManager
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.dogprofile.R
 import com.example.dogprofile.application.DogRegistrar
 import com.example.dogprofile.ui.models.DogFormStateModel
 import kotlinx.coroutines.Dispatchers
@@ -84,7 +89,7 @@ class AddDogState() : ViewModel() {
 //        addDog()
 //    }
 
-    fun addDog() {
+    fun addDog(context: Context) {
         val currentState = _dogFormState.value
 
         viewModelScope.launch {
@@ -102,6 +107,7 @@ class AddDogState() : ViewModel() {
                 )
                 if (result) {
                     _message.value = "Mascota registrada exitosamente."
+                    sendNotification(context, currentState.name)
                 } else {
                     _message.value = "Error al agregar la mascota."
                 }
@@ -110,6 +116,18 @@ class AddDogState() : ViewModel() {
 
             }
         }
+    }
+
+    @SuppressLint("NewApi")
+    fun sendNotification(context: Context, name: String) {
+        val notificationManager = context.getSystemService(NotificationManager::class.java)
+        val notification = Notification.Builder(context, "my_channel")
+            .setContentTitle("Nueva mascota registrada")
+            .setContentText("Cuidemos de $name!")
+            .setSmallIcon(R.drawable.pawpal_logo)
+            .setAutoCancel(true)
+            .build()
+        notificationManager.notify(1, notification)
     }
 
 

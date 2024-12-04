@@ -61,6 +61,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -100,6 +101,8 @@ fun AddDogScreen(navController: NavController, viewModel: AddDogState) {
 
     val showMessage by viewModel.showMessage.collectAsState()
     val message by viewModel.message.collectAsState()
+
+    val context = LocalContext.current
 
     LaunchedEffect(showMessage) {
         if (showMessage) {
@@ -204,7 +207,7 @@ fun AddDogScreen(navController: NavController, viewModel: AddDogState) {
                             .width(180.dp)
                             .height(48.dp),
                         onClick = {
-                            viewModel.addDog()
+                            viewModel.addDog(context)
                         }
                     ) {
                         Text(
