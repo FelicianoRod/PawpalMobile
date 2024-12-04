@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -19,7 +18,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -35,7 +33,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,21 +42,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.core.ui.components.DrawerContent
 import com.example.core.ui.components.TopAppBarPrimary
-import com.example.core.ui.viewmodel.DrawerViewModel
 import com.example.core.ui.viewmodel.SelectedDogViewModel
 import com.example.core.utils.TimestamptzFormatter
-import com.example.core.utils.dayMonth
 import com.example.weight.domain.model.Weight
+import com.example.weight.domain.model.alimentation.Alimentation
+import com.example.weight.ui.viewmodel.AlimentationViewModel
 import com.example.weight.ui.viewmodel.WeightViewModel
-import com.github.tehras.charts.bar.renderer.yaxis.SimpleYAxisDrawer
-import com.github.tehras.charts.bar.renderer.yaxis.YAxisDrawer
 import com.github.tehras.charts.line.LineChart
 import com.github.tehras.charts.line.LineChartData
 import com.github.tehras.charts.line.renderer.line.SolidLineDrawer
@@ -69,28 +62,22 @@ import java.time.Instant
 import java.time.ZoneId
 
 @Composable
-fun WeightScreen(
+fun AlimentationScreen(
     navController: NavController,
-    drawerViewModel: DrawerViewModel = hiltViewModel(),
-    weightViewModel: WeightViewModel = hiltViewModel(),
+    alimentationViewModel: AlimentationViewModel = hiltViewModel(),
     selectedDogViewModel: SelectedDogViewModel = hiltViewModel()
 ) {
-
-//    LaunchedEffect(Unit) {
-//        weightViewModel.getWeightHistory(selectedDogViewModel.selectedDog.value ?: 0)
-//    }
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    val weightHistory by weightViewModel.weightHistory.collectAsState()
-    val isLoadingWeightHistory by weightViewModel.isLoading.collectAsState()
+    val alimentationHistory by alimentationViewModel.alimentationHistory.collectAsState()
 
     val selectedDog by selectedDogViewModel.selectedDog.collectAsState()
 
-    val startDate by weightViewModel.startDate.collectAsState()
-    val endDate by weightViewModel.endDate.collectAsState()
-    val selectedDates by weightViewModel.selectedDates.collectAsState()
+    val startDate by alimentationViewModel.startDate.collectAsState()
+    val endDate by alimentationViewModel.endDate.collectAsState()
+    val selectedDates by alimentationViewModel.selectedDates.collectAsState()
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -111,14 +98,14 @@ fun WeightScreen(
                     .verticalScroll(rememberScrollState()),
 //                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                BetweenDates(
-                    startDateChanged = { weightViewModel.onStartDateChanged(it) },
-                    endDateChanged = { weightViewModel.onEndDateChanged(it) }
+                BetweenDatesAlimentation(
+                    startDateChanged = { alimentationViewModel.onStartDateChanged(it) },
+                    endDateChanged = { alimentationViewModel.onEndDateChanged(it) }
                 )
-                WeightChart(weightHistory, selectedDog, navController)
-                CustomButtom(
+                WeightChartAlimentation(alimentationHistory, selectedDog, navController)
+                CustomButtomAlimentation(
                     onClick = {
-                        weightViewModel.getWeightHistory(selectedDog ?: 0, startDate, endDate)
+                        alimentationViewModel.getAlimentationHistory(selectedDog ?: 0, startDate, endDate)
                     },
                     selectedDog = selectedDog,
                     selectedDates = selectedDates
@@ -130,7 +117,7 @@ fun WeightScreen(
 }
 
 @Composable
-fun WeightChart(weightHistory: List<Weight>?, selectedDog: Int?, navController: NavController) {
+fun WeightChartAlimentation(weightHistory: List<Alimentation>?, selectedDog: Int?, navController: NavController) {
 
     val timestamptzFormatter = TimestamptzFormatter()
 
@@ -186,7 +173,7 @@ fun WeightChart(weightHistory: List<Weight>?, selectedDog: Int?, navController: 
             } else if (weightHistory.isEmpty()) {
 
                 Text(
-                    text = "No se tiene registro de peso",
+                    text = "No se tiene registro de alimentación",
                     style = MaterialTheme.typography.labelMedium
                 )
 
@@ -198,7 +185,7 @@ fun WeightChart(weightHistory: List<Weight>?, selectedDog: Int?, navController: 
 //                Spacer(modifier = Modifier.height(32.dp))
 
                 val points = weightHistory.map { weight ->
-                    LineChartData.Point(weight.weight.toFloat(), weight.created_at )
+                    LineChartData.Point(weight.food_amount.toFloat(), weight.created_at )
                 }
 
                 val line = SolidLineDrawer(
@@ -210,7 +197,7 @@ fun WeightChart(weightHistory: List<Weight>?, selectedDog: Int?, navController: 
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = "P. (kg)",
+                        text = "Cantidad (gramos)",
                         style = MaterialTheme.typography.labelMedium,
                         modifier = Modifier.rotate(-90f)
                     )
@@ -241,19 +228,19 @@ fun WeightChart(weightHistory: List<Weight>?, selectedDog: Int?, navController: 
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun BetweenDatesPreview() {
-    BetweenDates(
-        startDateChanged = {},
-        endDateChanged = {}
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun BetweenDatesPreview() {
+//    BetweenDates(
+//        startDateChanged = {},
+//        endDateChanged = {}
+//    )
+//}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BetweenDates(
+fun BetweenDatesAlimentation(
     startDateChanged: (String) -> Unit,
     endDateChanged: (String) -> Unit
 ) {
@@ -401,7 +388,7 @@ fun BetweenDates(
 }
 
 @Composable
-fun CustomButtom(
+fun CustomButtomAlimentation(
     onClick: () -> Unit,
     selectedDog: Int?,
     selectedDates: Boolean

@@ -2,8 +2,10 @@ package com.example.weight.ui.screens
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +13,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -19,7 +23,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
-import androidx.compose.material3.DrawerState
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -35,7 +38,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -45,21 +47,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.core.ui.components.DrawerContent
 import com.example.core.ui.components.TopAppBarPrimary
-import com.example.core.ui.viewmodel.DrawerViewModel
 import com.example.core.ui.viewmodel.SelectedDogViewModel
 import com.example.core.utils.TimestamptzFormatter
-import com.example.core.utils.dayMonth
-import com.example.weight.domain.model.Weight
-import com.example.weight.ui.viewmodel.WeightViewModel
-import com.github.tehras.charts.bar.renderer.yaxis.SimpleYAxisDrawer
-import com.github.tehras.charts.bar.renderer.yaxis.YAxisDrawer
+import com.example.core.utils.getDistance
+import com.example.weight.domain.model.alimentation.Alimentation
+import com.example.weight.domain.model.walk.Walk
+import com.example.weight.ui.viewmodel.WalkViewModel
 import com.github.tehras.charts.line.LineChart
 import com.github.tehras.charts.line.LineChartData
 import com.github.tehras.charts.line.renderer.line.SolidLineDrawer
@@ -69,28 +67,22 @@ import java.time.Instant
 import java.time.ZoneId
 
 @Composable
-fun WeightScreen(
+fun WalkScreen(
     navController: NavController,
-    drawerViewModel: DrawerViewModel = hiltViewModel(),
-    weightViewModel: WeightViewModel = hiltViewModel(),
+    walkViewModel: WalkViewModel = hiltViewModel(),
     selectedDogViewModel: SelectedDogViewModel = hiltViewModel()
 ) {
-
-//    LaunchedEffect(Unit) {
-//        weightViewModel.getWeightHistory(selectedDogViewModel.selectedDog.value ?: 0)
-//    }
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
 
-    val weightHistory by weightViewModel.weightHistory.collectAsState()
-    val isLoadingWeightHistory by weightViewModel.isLoading.collectAsState()
+    val walkHistory by walkViewModel.walkHistory.collectAsState()
 
     val selectedDog by selectedDogViewModel.selectedDog.collectAsState()
 
-    val startDate by weightViewModel.startDate.collectAsState()
-    val endDate by weightViewModel.endDate.collectAsState()
-    val selectedDates by weightViewModel.selectedDates.collectAsState()
+    val startDate by walkViewModel.startDate.collectAsState()
+    val endDate by walkViewModel.endDate.collectAsState()
+    val selectedDates by walkViewModel.selectedDates.collectAsState()
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -102,7 +94,7 @@ fun WeightScreen(
     ) {
         Scaffold(
             topBar = {
-                TopAppBarPrimary("Peso de la mascota", drawerState, scope)
+                TopAppBarPrimary("Paseos", drawerState, scope)
             }
         ) { innerPadding ->
             Column(
@@ -111,26 +103,46 @@ fun WeightScreen(
                     .verticalScroll(rememberScrollState()),
 //                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                BetweenDates(
-                    startDateChanged = { weightViewModel.onStartDateChanged(it) },
-                    endDateChanged = { weightViewModel.onEndDateChanged(it) }
+                BetweenDatesWalk(
+                    startDateChanged = { walkViewModel.onStartDateChanged(it) },
+                    endDateChanged = { walkViewModel.onEndDateChanged(it) }
                 )
-                WeightChart(weightHistory, selectedDog, navController)
-                CustomButtom(
+                WeightChartWalk(walkHistory, selectedDog, navController)
+                CustomButtomWalk(
                     onClick = {
-                        weightViewModel.getWeightHistory(selectedDog ?: 0, startDate, endDate)
+                        walkViewModel.getWalkHistory(selectedDog ?: 0, startDate, endDate)
                     },
                     selectedDog = selectedDog,
                     selectedDates = selectedDates
 
                 )
+                walkHistory?.forEach { walk ->
+                    WalkItem(walk = walk)
+                }
+//                Spacer(modifier = Modifier.height(16.dp))
+//                Column(
+//                    modifier = Modifier.fillMaxWidth()
+//                        .verticalScroll(rememberScrollState()),
+////                    contentPadding = PaddingValues(16.dp),
+////                    verticalArrangement = Arrangement.spacedBy(8.dp)
+//                ) {
+//                    walkHistory?.forEach { walk ->
+//                        WalkItem(walk = walk)
+//                    }
+////                    if (walkHistory != null) {
+////                        items(walkHistory?: emptyList()) { walk ->
+////                            WalkItem(walk = walk)
+////                        }
+////                    }
+//                }
             }
         }
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun WeightChart(weightHistory: List<Weight>?, selectedDog: Int?, navController: NavController) {
+fun WeightChartWalk(walkHistory: List<Walk>?, selectedDog: Int?, navController: NavController) {
 
     val timestamptzFormatter = TimestamptzFormatter()
 
@@ -147,7 +159,7 @@ fun WeightChart(weightHistory: List<Weight>?, selectedDog: Int?, navController: 
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Control de peso",
+                text = "Paseos",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(16.dp)
             )
@@ -170,12 +182,12 @@ fun WeightChart(weightHistory: List<Weight>?, selectedDog: Int?, navController: 
                         navController.navigate("home")
                     },
                 ) {
-                    Text("Ir a home")
+                    Text("Ir a inicio")
                 }
 
             }
 
-            if (weightHistory == null) {
+            if (walkHistory == null) {
 
                 Text(
                     text = "...",
@@ -183,10 +195,10 @@ fun WeightChart(weightHistory: List<Weight>?, selectedDog: Int?, navController: 
                 )
 
 
-            } else if (weightHistory.isEmpty()) {
+            } else if (walkHistory.isEmpty()) {
 
                 Text(
-                    text = "No se tiene registro de peso",
+                    text = "No se tiene registro de paseos",
                     style = MaterialTheme.typography.labelMedium
                 )
 
@@ -197,8 +209,8 @@ fun WeightChart(weightHistory: List<Weight>?, selectedDog: Int?, navController: 
 //                )
 //                Spacer(modifier = Modifier.height(32.dp))
 
-                val points = weightHistory.map { weight ->
-                    LineChartData.Point(weight.weight.toFloat(), weight.created_at )
+                val points = walkHistory.map { weight ->
+                    LineChartData.Point(getDistance(weight.distance), weight.day )
                 }
 
                 val line = SolidLineDrawer(
@@ -210,7 +222,7 @@ fun WeightChart(weightHistory: List<Weight>?, selectedDog: Int?, navController: 
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = "P. (kg)",
+                        text = "Distancia (km)",
                         style = MaterialTheme.typography.labelMedium,
                         modifier = Modifier.rotate(-90f)
                     )
@@ -223,7 +235,7 @@ fun WeightChart(weightHistory: List<Weight>?, selectedDog: Int?, navController: 
                         animation = simpleChartAnimation(),
                         pointDrawer = FilledCircularPointDrawer(color = MaterialTheme.colorScheme.secondary),
 //                        horizontalOffset = -2f,
-                        labels = weightHistory.map { timestamptzFormatter.getFormattedDate(it.created_at) }
+                        labels = walkHistory.map { timestamptzFormatter.getFormattedDate(it.day) }
                     )
                 }
                 Row(
@@ -241,19 +253,19 @@ fun WeightChart(weightHistory: List<Weight>?, selectedDog: Int?, navController: 
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun BetweenDatesPreview() {
-    BetweenDates(
-        startDateChanged = {},
-        endDateChanged = {}
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun BetweenDatesPreview() {
+//    BetweenDates(
+//        startDateChanged = {},
+//        endDateChanged = {}
+//    )
+//}
 
 @RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun BetweenDates(
+fun BetweenDatesWalk(
     startDateChanged: (String) -> Unit,
     endDateChanged: (String) -> Unit
 ) {
@@ -401,7 +413,7 @@ fun BetweenDates(
 }
 
 @Composable
-fun CustomButtom(
+fun CustomButtomWalk(
     onClick: () -> Unit,
     selectedDog: Int?,
     selectedDates: Boolean
@@ -417,6 +429,30 @@ fun CustomButtom(
             enabled = selectedDog != null && selectedDates
         ) {
             Text("Ver historial")
+        }
+    }
+}
+
+@Composable
+fun WalkItem(walk: Walk) {
+
+    val timestamptzFormatter = TimestamptzFormatter()
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+//            .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+//            .padding(16.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(16.dp)
+        ) {
+            Text(text = "Día: ${timestamptzFormatter.getFormattedDate(walk.day)}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "Distancia: ${walk.distance}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "Tiempo total: ${walk.total_time}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "Notas: ${walk.notes}", style = MaterialTheme.typography.bodySmall)
+
         }
     }
 }
