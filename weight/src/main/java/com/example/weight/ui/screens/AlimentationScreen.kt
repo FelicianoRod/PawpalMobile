@@ -80,7 +80,7 @@ fun AlimentationScreen(
     val selectedDates by alimentationViewModel.selectedDates.collectAsState()
 
     ModalNavigationDrawer(
-        drawerState = rememberDrawerState(initialValue = DrawerValue.Closed),
+        drawerState = drawerState,
         drawerContent = {
             ModalDrawerSheet {
                 DrawerContent(navController)
