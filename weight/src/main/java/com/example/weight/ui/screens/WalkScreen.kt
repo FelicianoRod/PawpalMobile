@@ -35,6 +35,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -222,7 +223,7 @@ fun WeightChartWalk(walkHistory: List<Walk>?, selectedDog: Int?, navController: 
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = "Distancia (km)",
+                        text = "km",
                         style = MaterialTheme.typography.labelMedium,
                         modifier = Modifier.rotate(-90f)
                     )
@@ -302,7 +303,7 @@ fun BetweenDatesWalk(
 //        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        OutlinedTextField(
+        TextField(
             value = startDate.value,
             onValueChange = {},
             label = { Text("Fecha inicio") },
@@ -322,7 +323,7 @@ fun BetweenDatesWalk(
             }
         )
         Spacer(modifier = Modifier.width(16.dp))
-        OutlinedTextField(
+        TextField(
             value = endDate.value,
             onValueChange = {},
             label = { Text("Fecha final") },

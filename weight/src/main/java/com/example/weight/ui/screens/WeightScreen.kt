@@ -32,6 +32,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -290,7 +291,7 @@ fun BetweenDates(
 //        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        OutlinedTextField(
+        TextField(
             value = startDate.value,
             onValueChange = {},
             label = { Text("Fecha inicio") },
@@ -310,7 +311,7 @@ fun BetweenDates(
             }
         )
         Spacer(modifier = Modifier.width(16.dp))
-        OutlinedTextField(
+        TextField(
             value = endDate.value,
             onValueChange = {},
             label = { Text("Fecha final") },

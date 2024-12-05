@@ -162,9 +162,9 @@ fun HomeScreen(
                         }
                     }
                 }
-                WeightChart(weightHistory)
-                WalksChart(walks)
-                NutritionChart(nutritionHistory)
+//                WeightChart(weightHistory)
+//                WalksChart(walks)
+//                NutritionChart(nutritionHistory)
             }
         }
     }
@@ -324,6 +324,7 @@ fun PetItem(dog: Dog, isSelected: Boolean, onClick: () -> Unit) {
                 )
         ) {
             SubcomposeAsyncImage(
+                modifier = Modifier.fillMaxWidth(),
                 model = dog.image_url,
                 contentDescription = "Dog Image",
                 contentScale = ContentScale.Crop,

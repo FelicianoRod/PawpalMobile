@@ -38,6 +38,7 @@ import com.example.userprofile.ui.viewmodel.ProfileStateViewModel
 import com.example.userprofile.ui.viewmodel.ThemeStateViewModel
 import com.example.userprofile.ui.viewmodel.UserProfileStateViewModel
 import com.example.weight.ui.screens.AlimentationScreen
+import com.example.weight.ui.screens.VaccineScreen
 import com.example.weight.ui.screens.WalkScreen
 import com.example.weight.ui.screens.WeightScreen
 
@@ -159,6 +160,9 @@ fun AppNavigation(themeStateViewModel: ThemeStateViewModel) {
             }
             composable(route = AppScreens.WalkScreen.route) {
                 WalkScreen(navController)
+            }
+            composable(route = AppScreens.VaccineScreen.route) {
+                VaccineScreen(navController)
             }
 
             // Deep link
