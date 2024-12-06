@@ -30,6 +30,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
@@ -89,7 +90,7 @@ fun AlimentationScreen(
     ) {
         Scaffold(
             topBar = {
-                TopAppBarPrimary("Peso de la mascota", drawerState, scope)
+                TopAppBarPrimary("Alimentación", drawerState, scope)
             }
         ) { innerPadding ->
             Column(
@@ -134,7 +135,7 @@ fun WeightChartAlimentation(weightHistory: List<Alimentation>?, selectedDog: Int
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Control de peso",
+                text = "Alimentación",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(16.dp)
             )
@@ -197,7 +198,7 @@ fun WeightChartAlimentation(weightHistory: List<Alimentation>?, selectedDog: Int
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = "Cantidad (gramos)",
+                        text = "Gramos",
                         style = MaterialTheme.typography.labelMedium,
                         modifier = Modifier.rotate(-90f)
                     )
@@ -277,7 +278,7 @@ fun BetweenDatesAlimentation(
 //        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        OutlinedTextField(
+        TextField(
             value = startDate.value,
             onValueChange = {},
             label = { Text("Fecha inicio") },
@@ -297,7 +298,7 @@ fun BetweenDatesAlimentation(
             }
         )
         Spacer(modifier = Modifier.width(16.dp))
-        OutlinedTextField(
+        TextField(
             value = endDate.value,
             onValueChange = {},
             label = { Text("Fecha final") },

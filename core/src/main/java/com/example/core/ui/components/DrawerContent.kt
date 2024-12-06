@@ -21,6 +21,7 @@ import androidx.compose.material.icons.filled.Park
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.filled.Restaurant
+import androidx.compose.material.icons.filled.Vaccines
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -99,6 +100,15 @@ fun DrawerContent(navController: NavController) {
                 selected = currentRoute == "walk_screen",
                 modifier = Modifier.clickable {
                     navController.navigate("walk_screen")
+                }
+            )
+            DrawerItem(
+                icon = Icons.Default.Vaccines,
+                label = "Vacunas",
+                notificationCount = 0,
+                selected = currentRoute == "vaccine_screen",
+                modifier = Modifier.clickable {
+                    navController.navigate("vaccine_screen")
                 }
             )
 

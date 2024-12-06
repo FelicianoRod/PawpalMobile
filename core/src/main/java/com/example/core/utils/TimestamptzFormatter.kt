@@ -1,7 +1,9 @@
 package com.example.core.utils
 
+import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -22,6 +24,13 @@ class TimestamptzFormatter {
         val formattedDateTime = dateTime.format(dateTimeFormatter)
 
         return formattedDateTime
+    }
+
+    @SuppressLint("NewApi")
+    fun formattedDate(date: String): String {
+        val localDate = LocalDate.parse(date)
+        val formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy")
+        return localDate.format(formatter)
     }
 
 }

@@ -162,9 +162,9 @@ fun HomeScreen(
                         }
                     }
                 }
-                WeightChart(weightHistory)
-                WalksChart(walks)
-                NutritionChart(nutritionHistory)
+//                WeightChart(weightHistory)
+//                WalksChart(walks)
+//                NutritionChart(nutritionHistory)
             }
         }
     }
@@ -324,6 +324,7 @@ fun PetItem(dog: Dog, isSelected: Boolean, onClick: () -> Unit) {
                 )
         ) {
             SubcomposeAsyncImage(
+                modifier = Modifier.fillMaxWidth(),
                 model = dog.image_url,
                 contentDescription = "Dog Image",
                 contentScale = ContentScale.Crop,
@@ -350,7 +351,7 @@ fun PetItem(dog: Dog, isSelected: Boolean, onClick: () -> Unit) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(text = dog.name, fontSize = 14.sp)
+        Text(text = dog.name, fontSize = 14.sp)//
     }
 }
 
