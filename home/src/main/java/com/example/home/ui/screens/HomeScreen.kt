@@ -351,7 +351,7 @@ fun PetItem(dog: Dog, isSelected: Boolean, onClick: () -> Unit) {
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        Text(text = dog.name, fontSize = 14.sp)
+        Text(text = dog.name, fontSize = 14.sp)//
     }
 }
 
